@@ -1,0 +1,7 @@
+.DS_Store
+RP2040_Fan_Controller/#auto_saved_files#
+RP2040_Fan_Controller/RP2040_Fan_Controller-backups/
+RP2040_Fan_Controller/_autosave*
+RP2040_Fan_Controller/fp-info-cache
+RP2040_Fan_Controller/fp-lib-table
+RP2040_Fan_Controller/*.lck

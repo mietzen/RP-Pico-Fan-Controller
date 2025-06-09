@@ -1985,28 +1985,10 @@
 		(uuid "0ef29a8b-91cc-4c63-8abc-e01ab49491b8")
 	)
 	(junction
-		(at 97.79 58.42)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "1d67f7ba-cc7c-481b-9a52-f73078b79876")
-	)
-	(junction
-		(at 77.47 33.02)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "227f8ad1-f0f8-4a6a-932b-abfd50ba6390")
-	)
-	(junction
 		(at 48.26 167.64)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "253d7cf1-33e6-42ee-bc48-0f4922deb09c")
-	)
-	(junction
-		(at 100.33 53.34)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "25cfb7f8-943c-461c-b6b9-04afcf90f35a")
 	)
 	(junction
 		(at 158.75 92.71)
@@ -2015,28 +1997,10 @@
 		(uuid "269bb661-133f-4b92-ada4-c5f412506281")
 	)
 	(junction
-		(at 95.25 63.5)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "26fc81ae-5e26-4e03-8c9a-84a88a5595e2")
-	)
-	(junction
-		(at 77.47 43.18)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "28c159c6-52b0-4e32-9460-8484935bd59b")
-	)
-	(junction
 		(at 57.15 167.64)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "2f4ff1c6-e246-4a90-b6eb-3560f82221e2")
-	)
-	(junction
-		(at 77.47 38.1)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "43c0982f-c9c9-424b-ab40-5232362ccb73")
 	)
 	(junction
 		(at 29.21 167.64)
@@ -2055,12 +2019,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "634d26ff-6e00-41e3-a899-8ecca26902a9")
-	)
-	(junction
-		(at 93.98 66.04)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "63dc2092-c816-4ee3-9372-faefa816a8f2")
 	)
 	(junction
 		(at 171.45 92.71)
@@ -2087,28 +2045,10 @@
 		(uuid "8b804418-12b2-40e0-95eb-2020539dc2e3")
 	)
 	(junction
-		(at 77.47 35.56)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "981ed64a-e2dd-49ff-ae9e-672225f674f3")
-	)
-	(junction
-		(at 96.52 60.96)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "9a413ce6-8a03-41da-a43e-ad1bd7d0bcc7")
-	)
-	(junction
 		(at 39.37 167.64)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "ab66f3d0-b296-4991-98a4-787add60f033")
-	)
-	(junction
-		(at 99.06 55.88)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "b028b8d2-8642-4481-be3e-7b967a327e70")
 	)
 	(junction
 		(at 69.85 177.8)
@@ -2139,12 +2079,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "dde47bbb-6f2e-4374-8af0-da686e097101")
-	)
-	(junction
-		(at 77.47 40.64)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "e6db7094-4def-410d-9ee2-cac78af820cf")
 	)
 	(wire
 		(pts
@@ -2178,16 +2112,6 @@
 	)
 	(wire
 		(pts
-			(xy 90.17 35.56) (xy 97.79 35.56)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0f395467-c75f-4824-84a5-95b9cbde35c3")
-	)
-	(wire
-		(pts
 			(xy 74.93 163.83) (xy 74.93 167.64)
 		)
 		(stroke
@@ -2195,16 +2119,6 @@
 			(type default)
 		)
 		(uuid "124b28b8-8831-4a17-8085-af0bcc3facd8")
-	)
-	(wire
-		(pts
-			(xy 77.47 30.48) (xy 85.09 30.48)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "145ca43f-9d82-4090-a4f8-fa1bc9322b0e")
 	)
 	(wire
 		(pts
@@ -2228,26 +2142,6 @@
 	)
 	(wire
 		(pts
-			(xy 99.06 33.02) (xy 99.06 55.88)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1a4c793f-5709-4482-9b90-dc28b804fd52")
-	)
-	(wire
-		(pts
-			(xy 90.17 33.02) (xy 99.06 33.02)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1aeed4e8-aeca-462e-986a-7d041c7471fe")
-	)
-	(wire
-		(pts
 			(xy 74.93 163.83) (xy 78.74 163.83)
 		)
 		(stroke
@@ -2255,16 +2149,6 @@
 			(type default)
 		)
 		(uuid "1c06c3ce-abc6-4ddb-a57a-f4488c52451f")
-	)
-	(wire
-		(pts
-			(xy 77.47 38.1) (xy 85.09 38.1)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "25cb3b0a-4a95-4c63-8eb4-e690db478280")
 	)
 	(wire
 		(pts
@@ -2278,16 +2162,6 @@
 	)
 	(wire
 		(pts
-			(xy 77.47 33.02) (xy 85.09 33.02)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "2ad54c70-a064-44aa-aa50-8c7e9d1a1c48")
-	)
-	(wire
-		(pts
 			(xy 153.67 60.96) (xy 191.77 60.96)
 		)
 		(stroke
@@ -2295,16 +2169,6 @@
 			(type default)
 		)
 		(uuid "2b664b9e-5f1e-4671-b1d8-a4158a4f3d5e")
-	)
-	(wire
-		(pts
-			(xy 77.47 63.5) (xy 95.25 63.5)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "33d68382-6afd-4ffc-a2b7-998e36ad15c0")
 	)
 	(wire
 		(pts
@@ -2358,16 +2222,6 @@
 	)
 	(wire
 		(pts
-			(xy 96.52 38.1) (xy 96.52 60.96)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3bb7b314-9191-4454-8399-d02aadf99722")
-	)
-	(wire
-		(pts
 			(xy 158.75 69.85) (xy 162.56 69.85)
 		)
 		(stroke
@@ -2398,7 +2252,7 @@
 	)
 	(wire
 		(pts
-			(xy 97.79 58.42) (xy 102.87 58.42)
+			(xy 59.69 58.42) (xy 102.87 58.42)
 		)
 		(stroke
 			(width 0)
@@ -2418,16 +2272,6 @@
 	)
 	(wire
 		(pts
-			(xy 77.47 35.56) (xy 85.09 35.56)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "45e956d1-d16c-4397-80a3-18415fb96f08")
-	)
-	(wire
-		(pts
 			(xy 48.26 133.35) (xy 52.07 133.35)
 		)
 		(stroke
@@ -2435,26 +2279,6 @@
 			(type default)
 		)
 		(uuid "463fc6de-43a7-4912-af05-d068b0af9d34")
-	)
-	(wire
-		(pts
-			(xy 93.98 43.18) (xy 93.98 66.04)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "47061f3d-6262-442d-8274-58ee65f6cb35")
-	)
-	(wire
-		(pts
-			(xy 100.33 30.48) (xy 100.33 53.34)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "47825bc2-dcec-480c-baaf-12b503d97f60")
 	)
 	(wire
 		(pts
@@ -2488,16 +2312,6 @@
 	)
 	(wire
 		(pts
-			(xy 77.47 30.48) (xy 77.47 33.02)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4bdb4868-9033-40fe-aa3b-ce2536c4b888")
-	)
-	(wire
-		(pts
 			(xy 57.15 143.51) (xy 57.15 167.64)
 		)
 		(stroke
@@ -2528,7 +2342,7 @@
 	)
 	(wire
 		(pts
-			(xy 93.98 66.04) (xy 102.87 66.04)
+			(xy 86.36 66.04) (xy 102.87 66.04)
 		)
 		(stroke
 			(width 0)
@@ -2558,16 +2372,6 @@
 	)
 	(wire
 		(pts
-			(xy 59.69 58.42) (xy 97.79 58.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5350c0bd-d110-40af-8a09-7d57e8fc12c5")
-	)
-	(wire
-		(pts
 			(xy 148.59 76.2) (xy 153.67 76.2)
 		)
 		(stroke
@@ -2585,16 +2389,6 @@
 			(type default)
 		)
 		(uuid "57d98f9a-09ec-4a6f-86ac-6da86fde7eab")
-	)
-	(wire
-		(pts
-			(xy 68.58 60.96) (xy 96.52 60.96)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "58785a51-96d9-4c1f-881f-81f4a58a9492")
 	)
 	(wire
 		(pts
@@ -2635,16 +2429,6 @@
 			(type default)
 		)
 		(uuid "5e8e0806-5a41-41d5-aeaa-022186a69eac")
-	)
-	(wire
-		(pts
-			(xy 90.17 38.1) (xy 96.52 38.1)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5eac498c-9879-483a-a822-62d0ff0d2a92")
 	)
 	(wire
 		(pts
@@ -2718,23 +2502,13 @@
 	)
 	(wire
 		(pts
-			(xy 100.33 53.34) (xy 102.87 53.34)
+			(xy 41.91 53.34) (xy 102.87 53.34)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "7314e88c-3bc6-4d41-9ac2-a6c910bc31a6")
-	)
-	(wire
-		(pts
-			(xy 77.47 38.1) (xy 77.47 35.56)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "74307077-99a4-4d42-a73b-635266e6f4cf")
 	)
 	(wire
 		(pts
@@ -2768,16 +2542,6 @@
 	)
 	(wire
 		(pts
-			(xy 77.47 35.56) (xy 77.47 33.02)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7afbcf35-7d61-4e47-a6fd-a8059b15d17b")
-	)
-	(wire
-		(pts
 			(xy 101.6 73.66) (xy 102.87 73.66)
 		)
 		(stroke
@@ -2795,36 +2559,6 @@
 			(type default)
 		)
 		(uuid "7c780591-cfcd-4d08-93c5-767e77a61e8f")
-	)
-	(wire
-		(pts
-			(xy 97.79 35.56) (xy 97.79 58.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "810eb0fe-77f7-4c82-b6da-f4ea234134c4")
-	)
-	(wire
-		(pts
-			(xy 86.36 66.04) (xy 93.98 66.04)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8119c08c-e8f4-45e1-80a1-efa449b73fc6")
-	)
-	(wire
-		(pts
-			(xy 77.47 40.64) (xy 77.47 43.18)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "823966d5-7311-4a20-8698-502edfc40064")
 	)
 	(wire
 		(pts
@@ -2918,16 +2652,6 @@
 	)
 	(wire
 		(pts
-			(xy 77.47 40.64) (xy 85.09 40.64)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8b4dfc23-42b0-4247-9e62-def15f895ec3")
-	)
-	(wire
-		(pts
 			(xy 69.85 177.8) (xy 69.85 166.37)
 		)
 		(stroke
@@ -2958,16 +2682,6 @@
 	)
 	(wire
 		(pts
-			(xy 50.8 55.88) (xy 99.06 55.88)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "96d77f73-8602-4dbb-ab0f-6dfc445ebebf")
-	)
-	(wire
-		(pts
 			(xy 171.45 86.36) (xy 171.45 92.71)
 		)
 		(stroke
@@ -2985,16 +2699,6 @@
 			(type default)
 		)
 		(uuid "9b39db31-db97-498e-b5db-503d1a75bb0e")
-	)
-	(wire
-		(pts
-			(xy 77.47 45.72) (xy 77.47 43.18)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9cd04fa5-bab7-4957-9acc-3c47e564d815")
 	)
 	(wire
 		(pts
@@ -3025,16 +2729,6 @@
 			(type default)
 		)
 		(uuid "a498211b-f34e-48dc-bd39-99abc0b0a88d")
-	)
-	(wire
-		(pts
-			(xy 100.33 53.34) (xy 41.91 53.34)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a6dcef8c-f8e2-4c39-9f10-37f450cafd75")
 	)
 	(wire
 		(pts
@@ -3088,7 +2782,7 @@
 	)
 	(wire
 		(pts
-			(xy 95.25 63.5) (xy 102.87 63.5)
+			(xy 77.47 63.5) (xy 102.87 63.5)
 		)
 		(stroke
 			(width 0)
@@ -3105,16 +2799,6 @@
 			(type default)
 		)
 		(uuid "b1a6fd30-cf51-4c08-b562-21f1f18c67b2")
-	)
-	(wire
-		(pts
-			(xy 90.17 40.64) (xy 95.25 40.64)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b2bc4b4d-452f-412a-bacb-c1741a423861")
 	)
 	(wire
 		(pts
@@ -3138,17 +2822,7 @@
 	)
 	(wire
 		(pts
-			(xy 95.25 40.64) (xy 95.25 63.5)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b49728f5-bd90-4915-99f9-31c7cbb0043f")
-	)
-	(wire
-		(pts
-			(xy 99.06 55.88) (xy 102.87 55.88)
+			(xy 50.8 55.88) (xy 102.87 55.88)
 		)
 		(stroke
 			(width 0)
@@ -3218,26 +2892,6 @@
 	)
 	(wire
 		(pts
-			(xy 85.09 43.18) (xy 77.47 43.18)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "caae0350-64a1-4330-b3ee-c239fd20590f")
-	)
-	(wire
-		(pts
-			(xy 90.17 30.48) (xy 100.33 30.48)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "cfd3c2d5-ff8f-4f6a-98e9-4da5e5b1c54b")
-	)
-	(wire
-		(pts
 			(xy 52.07 177.8) (xy 60.96 177.8)
 		)
 		(stroke
@@ -3268,16 +2922,6 @@
 	)
 	(wire
 		(pts
-			(xy 77.47 38.1) (xy 77.47 40.64)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d42e594c-33ab-4e1c-a4dc-49385e460109")
-	)
-	(wire
-		(pts
 			(xy 90.17 130.81) (xy 90.17 71.12)
 		)
 		(stroke
@@ -3305,16 +2949,6 @@
 			(type default)
 		)
 		(uuid "d96d0994-dc7a-412a-a7cc-40743090a0b5")
-	)
-	(wire
-		(pts
-			(xy 90.17 43.18) (xy 93.98 43.18)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "db2c8b56-e15b-41da-aa03-17f0db7a05e7")
 	)
 	(wire
 		(pts
@@ -3388,7 +3022,7 @@
 	)
 	(wire
 		(pts
-			(xy 96.52 60.96) (xy 102.87 60.96)
+			(xy 68.58 60.96) (xy 102.87 60.96)
 		)
 		(stroke
 			(width 0)
@@ -3435,73 +3069,6 @@
 			(type default)
 		)
 		(uuid "ff25fd64-afed-46f3-8990-17b62e4ef5ac")
-	)
-	(symbol
-		(lib_id "Device:R_Small")
-		(at 87.63 38.1 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "151acc40-985d-416c-8441-03ace01460e1")
-		(property "Reference" "R13"
-			(at 84.074 37.338 90)
-			(effects
-				(font
-					(size 1.016 1.016)
-				)
-			)
-		)
-		(property "Value" "10k"
-			(at 87.63 38.1 90)
-			(effects
-				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal"
-			(at 87.63 38.1 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 87.63 38.1 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, small symbol"
-			(at 87.63 38.1 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "bdfa1c50-04e4-4d10-958a-10ee8056d68c")
-		)
-		(pin "2"
-			(uuid "d54855e6-71b1-4bbf-8b70-320c14ef043b")
-		)
-		(instances
-			(project "RP2040_Fan_Controller"
-				(path "/7497546a-5740-438d-96fb-d2555c11b760"
-					(reference "R13")
-					(unit 1)
-				)
-			)
-		)
 	)
 	(symbol
 		(lib_id "power:GND")
@@ -3713,72 +3280,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 77.47 45.72 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "3203bc18-7a72-4cd8-995d-da62286a4521")
-		(property "Reference" "#PWR01"
-			(at 77.47 52.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 77.47 50.8 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 77.47 45.72 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 77.47 45.72 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 77.47 45.72 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "74177e49-ffaa-4e1e-9bcc-268b11cf6ab2")
-		)
-		(instances
-			(project ""
-				(path "/7497546a-5740-438d-96fb-d2555c11b760"
-					(reference "#PWR01")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Motor:Fan_4pin")
 		(at 69.85 158.75 180)
 		(unit 1)
@@ -3850,73 +3351,6 @@
 			(project "RP2040_Fan_Controller"
 				(path "/7497546a-5740-438d-96fb-d2555c11b760"
 					(reference "Fan5")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R_Small")
-		(at 87.63 35.56 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "3a9b3e0f-ccd0-4a58-8bc2-2097bbbcbe2b")
-		(property "Reference" "R12"
-			(at 84.074 34.798 90)
-			(effects
-				(font
-					(size 1.016 1.016)
-				)
-			)
-		)
-		(property "Value" "10k"
-			(at 87.63 35.56 90)
-			(effects
-				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal"
-			(at 87.63 35.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 87.63 35.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, small symbol"
-			(at 87.63 35.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "938c24c7-6753-4c9f-98e2-3c12b57b0c0e")
-		)
-		(pin "2"
-			(uuid "ea5ac7f7-d9de-4a25-b6bf-a018d4c7730b")
-		)
-		(instances
-			(project "RP2040_Fan_Controller"
-				(path "/7497546a-5740-438d-96fb-d2555c11b760"
-					(reference "R12")
 					(unit 1)
 				)
 			)
@@ -4308,73 +3742,6 @@
 	)
 	(symbol
 		(lib_id "Device:R_Small")
-		(at 87.63 30.48 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "5891d203-eeae-423c-8c8d-1188b0586df5")
-		(property "Reference" "R10"
-			(at 84.074 29.718 90)
-			(effects
-				(font
-					(size 1.016 1.016)
-				)
-			)
-		)
-		(property "Value" "10K"
-			(at 87.63 30.48 90)
-			(effects
-				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal"
-			(at 87.63 30.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 87.63 30.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, small symbol"
-			(at 87.63 30.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "25276278-c7e4-4387-81b5-3859c81ed168")
-		)
-		(pin "2"
-			(uuid "07bd4fee-7505-444e-98af-b6b7bb754d5e")
-		)
-		(instances
-			(project "RP2040_Fan_Controller"
-				(path "/7497546a-5740-438d-96fb-d2555c11b760"
-					(reference "R10")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R_Small")
 		(at 99.06 68.58 90)
 		(unit 1)
 		(exclude_from_sim no)
@@ -4710,73 +4077,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R_Small")
-		(at 87.63 43.18 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "83b40bc2-5384-4bde-85c5-06be99b25619")
-		(property "Reference" "R15"
-			(at 84.074 42.418 90)
-			(effects
-				(font
-					(size 1.016 1.016)
-				)
-			)
-		)
-		(property "Value" "10k"
-			(at 87.63 43.18 90)
-			(effects
-				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal"
-			(at 87.63 43.18 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 87.63 43.18 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, small symbol"
-			(at 87.63 43.18 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "3a31d8b9-fedc-44b1-84e9-7e775070acbe")
-		)
-		(pin "2"
-			(uuid "d9c90afb-7db0-437a-bbf9-0e13fcf26360")
-		)
-		(instances
-			(project "RP2040_Fan_Controller"
-				(path "/7497546a-5740-438d-96fb-d2555c11b760"
-					(reference "R15")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Motor:Fan_4pin")
 		(at 43.18 128.27 180)
 		(unit 1)
@@ -4848,73 +4148,6 @@
 			(project "RP2040_Fan_Controller"
 				(path "/7497546a-5740-438d-96fb-d2555c11b760"
 					(reference "Fan2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R_Small")
-		(at 87.63 33.02 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "9472911f-28d2-45c9-82d4-5e1673746f05")
-		(property "Reference" "R11"
-			(at 84.074 32.258 90)
-			(effects
-				(font
-					(size 1.016 1.016)
-				)
-			)
-		)
-		(property "Value" "10k"
-			(at 87.63 33.02 90)
-			(effects
-				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal"
-			(at 87.63 33.02 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 87.63 33.02 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, small symbol"
-			(at 87.63 33.02 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b6315b61-e0b3-4386-b2b0-6f1830d9a764")
-		)
-		(pin "2"
-			(uuid "248f723a-5957-4314-9567-83075685948f")
-		)
-		(instances
-			(project "RP2040_Fan_Controller"
-				(path "/7497546a-5740-438d-96fb-d2555c11b760"
-					(reference "R11")
 					(unit 1)
 				)
 			)
@@ -5049,73 +4282,6 @@
 			(project "RP2040_Fan_Controller"
 				(path "/7497546a-5740-438d-96fb-d2555c11b760"
 					(reference "R2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R_Small")
-		(at 87.63 40.64 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "a37ee3fb-29a7-45be-83f9-fc2b66f44d38")
-		(property "Reference" "R14"
-			(at 84.074 39.878 90)
-			(effects
-				(font
-					(size 1.016 1.016)
-				)
-			)
-		)
-		(property "Value" "10k"
-			(at 87.63 40.64 90)
-			(effects
-				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal"
-			(at 87.63 40.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 87.63 40.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, small symbol"
-			(at 87.63 40.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "47403541-57bf-460c-b12d-7719426b4a59")
-		)
-		(pin "2"
-			(uuid "a810bb82-6d00-49e7-8b26-b21bc3638e27")
-		)
-		(instances
-			(project "RP2040_Fan_Controller"
-				(path "/7497546a-5740-438d-96fb-d2555c11b760"
-					(reference "R14")
 					(unit 1)
 				)
 			)
