@@ -9,3 +9,4 @@ RP2040_Fan_Controller/*-bak
 .venv
 *.zip
 .vscode
+go.sum

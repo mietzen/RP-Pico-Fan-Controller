@@ -186,8 +186,7 @@ func readTemperature(index int) {
 	adcValue := float64(thermistors[index].adc.Get())
 	r := rHigh * (65535.0/adcValue - 1.0)
 	lnr := math.Log(r / r25)
-	tempK := 1.0 / (1.0/298.15 + lnr/thermistors[index].bValue)
-	thermistors[index].temp = tempK - 273.15
+	thermistors[index].temp = -274.15 + 1.0/(1.0/298.15+lnr/thermistors[index].bValue)
 }
 
 func setFanSpeed(fanIndex int, speed int) error {
