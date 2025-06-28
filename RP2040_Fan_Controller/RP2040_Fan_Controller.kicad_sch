@@ -3214,7 +3214,7 @@
 	)
 	(global_label "RPM_FAN1"
 		(shape input)
-		(at 91.44 101.6 180)
+		(at 91.44 104.14 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -3224,7 +3224,7 @@
 		)
 		(uuid "0db57cad-b1f8-42a1-9d31-61bf9cd881a6")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 81.4707 101.6 0)
+			(at 81.4707 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3346,7 +3346,7 @@
 	)
 	(global_label "PWM_FAN6"
 		(shape input)
-		(at 91.44 124.46 180)
+		(at 91.44 132.08 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -3356,7 +3356,7 @@
 		)
 		(uuid "331191aa-c0ab-41d7-8498-5a182d5d8ccd")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 78.5972 124.46 0)
+			(at 78.5972 132.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3390,7 +3390,7 @@
 	)
 	(global_label "PWM_FAN3"
 		(shape input)
-		(at 91.44 109.22 180)
+		(at 91.44 116.84 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -3400,7 +3400,7 @@
 		)
 		(uuid "34d7e012-21db-4613-8701-d1ab75972d12")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 78.5972 109.22 0)
+			(at 78.5972 116.84 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3564,7 +3564,7 @@
 	)
 	(global_label "PWM_FAN2"
 		(shape input)
-		(at 91.44 104.14 180)
+		(at 91.44 111.76 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -3574,7 +3574,7 @@
 		)
 		(uuid "646c5fcc-d82f-4919-8f44-3fdc3c5b46e1")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 78.5972 104.14 0)
+			(at 78.5972 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3586,7 +3586,7 @@
 	)
 	(global_label "PWM_FAN1"
 		(shape input)
-		(at 91.44 99.06 180)
+		(at 91.44 106.68 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -3596,7 +3596,7 @@
 		)
 		(uuid "6cf22de0-f065-4bab-99e8-21ab5b1ddd7b")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 78.5972 99.06 0)
+			(at 78.5972 106.68 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3651,7 +3651,7 @@
 	)
 	(global_label "RPM_FAN5"
 		(shape input)
-		(at 91.44 121.92 180)
+		(at 91.44 124.46 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -3661,7 +3661,7 @@
 		)
 		(uuid "8f4aeacc-be92-4147-81a8-1b2a15aa6130")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 81.4707 121.92 0)
+			(at 81.4707 124.46 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3694,7 +3694,7 @@
 	)
 	(global_label "PWM_FAN5"
 		(shape input)
-		(at 91.44 119.38 180)
+		(at 91.44 127 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -3704,7 +3704,7 @@
 		)
 		(uuid "9d9ffb7f-1023-4c5c-bfd9-9abc89b7cbc0")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 78.5972 119.38 0)
+			(at 78.5972 127 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3804,7 +3804,7 @@
 	)
 	(global_label "RPM_FAN3"
 		(shape input)
-		(at 91.44 111.76 180)
+		(at 91.44 114.3 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -3814,7 +3814,7 @@
 		)
 		(uuid "aa8a5886-7a49-4206-827b-d7c189f8f337")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 81.4707 111.76 0)
+			(at 81.4707 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3848,7 +3848,7 @@
 	)
 	(global_label "RPM_FAN6"
 		(shape input)
-		(at 91.44 127 180)
+		(at 91.44 129.54 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -3858,7 +3858,7 @@
 		)
 		(uuid "c6306344-37a6-45e5-ae2e-fa0be12b3948")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 81.4707 127 0)
+			(at 81.4707 129.54 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3980,7 +3980,7 @@
 	)
 	(global_label "RPM_FAN4"
 		(shape input)
-		(at 91.44 116.84 180)
+		(at 91.44 119.38 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -3990,7 +3990,7 @@
 		)
 		(uuid "dce7e934-c9af-430a-b1a7-a8a8bfb18b27")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 81.4707 116.84 0)
+			(at 81.4707 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4002,7 +4002,7 @@
 	)
 	(global_label "PWM_FAN4"
 		(shape input)
-		(at 91.44 114.3 180)
+		(at 91.44 121.92 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -4012,7 +4012,7 @@
 		)
 		(uuid "dd1a646e-a4e1-4e67-939f-1466f704a038")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 78.5972 114.3 0)
+			(at 78.5972 121.92 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4068,7 +4068,7 @@
 	)
 	(global_label "RPM_FAN2"
 		(shape input)
-		(at 91.44 106.68 180)
+		(at 91.44 109.22 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -4078,7 +4078,7 @@
 		)
 		(uuid "e8e2efa0-3fb9-41a4-b19f-cb2cdf0e426a")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 81.4707 106.68 0)
+			(at 81.4707 109.22 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4119,7 +4119,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "2b7f6235-4583-40c5-a105-03ec69a384a6")
-		(property "Reference" "R7"
+		(property "Reference" "R4"
 			(at 43.688 170.942 90)
 			(effects
 				(font
@@ -4135,7 +4135,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal"
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal"
 			(at 40.64 170.18 0)
 			(effects
 				(font
@@ -4171,7 +4171,7 @@
 		(instances
 			(project "RP2040_Fan_Controller"
 				(path "/7497546a-5740-438d-96fb-d2555c11b760"
-					(reference "R7")
+					(reference "R4")
 					(unit 1)
 				)
 			)
@@ -4474,7 +4474,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "5858ae76-af37-49d5-86c5-f4dc308ba028")
-		(property "Reference" "R8"
+		(property "Reference" "R5"
 			(at 43.688 187.452 90)
 			(effects
 				(font
@@ -4490,7 +4490,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal"
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal"
 			(at 40.64 186.69 0)
 			(effects
 				(font
@@ -4526,7 +4526,7 @@
 		(instances
 			(project "RP2040_Fan_Controller"
 				(path "/7497546a-5740-438d-96fb-d2555c11b760"
-					(reference "R8")
+					(reference "R5")
 					(unit 1)
 				)
 			)
@@ -4541,7 +4541,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "5c685a62-7eca-4eae-b8b0-143d04a790d2")
-		(property "Reference" "R4"
+		(property "Reference" "R1"
 			(at 43.942 121.412 90)
 			(effects
 				(font
@@ -4557,7 +4557,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal"
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal"
 			(at 40.64 120.65 0)
 			(effects
 				(font
@@ -4593,7 +4593,7 @@
 		(instances
 			(project "RP2040_Fan_Controller"
 				(path "/7497546a-5740-438d-96fb-d2555c11b760"
-					(reference "R4")
+					(reference "R1")
 					(unit 1)
 				)
 			)
@@ -4608,7 +4608,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "5da7e77e-1602-4403-bdd1-65413ddc8e77")
-		(property "Reference" "R6"
+		(property "Reference" "R3"
 			(at 43.942 154.432 90)
 			(effects
 				(font
@@ -4624,7 +4624,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal"
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal"
 			(at 40.64 153.67 0)
 			(effects
 				(font
@@ -4660,7 +4660,7 @@
 		(instances
 			(project "RP2040_Fan_Controller"
 				(path "/7497546a-5740-438d-96fb-d2555c11b760"
-					(reference "R6")
+					(reference "R3")
 					(unit 1)
 				)
 			)
@@ -4954,7 +4954,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "7b1a98e1-8310-4dc6-8dac-507a13079577")
-		(property "Reference" "R1"
+		(property "Reference" "R7"
 			(at 91.186 190.754 90)
 			(effects
 				(font
@@ -4970,7 +4970,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal"
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal"
 			(at 93.98 191.77 0)
 			(effects
 				(font
@@ -5006,7 +5006,7 @@
 		(instances
 			(project "RP2040_Fan_Controller"
 				(path "/7497546a-5740-438d-96fb-d2555c11b760"
-					(reference "R1")
+					(reference "R7")
 					(unit 1)
 				)
 			)
@@ -5098,7 +5098,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "81c85fed-0486-4ab2-b4a6-d3da1e743815")
-		(property "Reference" "R5"
+		(property "Reference" "R2"
 			(at 43.942 137.922 90)
 			(effects
 				(font
@@ -5114,7 +5114,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal"
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal"
 			(at 40.64 137.16 0)
 			(effects
 				(font
@@ -5150,7 +5150,7 @@
 		(instances
 			(project "RP2040_Fan_Controller"
 				(path "/7497546a-5740-438d-96fb-d2555c11b760"
-					(reference "R5")
+					(reference "R2")
 					(unit 1)
 				)
 			)
@@ -5308,7 +5308,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "a15f40f8-7022-42a8-8d1e-b7f9869db22f")
-		(property "Reference" "R9"
+		(property "Reference" "R6"
 			(at 43.688 203.962 90)
 			(effects
 				(font
@@ -5324,7 +5324,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal"
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal"
 			(at 40.64 203.2 0)
 			(effects
 				(font
@@ -5360,7 +5360,7 @@
 		(instances
 			(project "RP2040_Fan_Controller"
 				(path "/7497546a-5740-438d-96fb-d2555c11b760"
-					(reference "R9")
+					(reference "R6")
 					(unit 1)
 				)
 			)
@@ -5375,7 +5375,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "a2e68c68-75db-494c-99c3-d9eab9b6a5c7")
-		(property "Reference" "R2"
+		(property "Reference" "R8"
 			(at 90.932 202.438 90)
 			(effects
 				(font
@@ -5391,7 +5391,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal"
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal"
 			(at 93.98 203.2 0)
 			(effects
 				(font
@@ -5427,7 +5427,7 @@
 		(instances
 			(project "RP2040_Fan_Controller"
 				(path "/7497546a-5740-438d-96fb-d2555c11b760"
-					(reference "R2")
+					(reference "R8")
 					(unit 1)
 				)
 			)
@@ -5519,7 +5519,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "b1b750a2-8379-40d7-9520-0fe19c388c3c")
-		(property "Reference" "R3"
+		(property "Reference" "R9"
 			(at 90.932 213.868 90)
 			(effects
 				(font
@@ -5535,7 +5535,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal"
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal"
 			(at 93.98 214.63 0)
 			(effects
 				(font
@@ -5571,7 +5571,7 @@
 		(instances
 			(project "RP2040_Fan_Controller"
 				(path "/7497546a-5740-438d-96fb-d2555c11b760"
-					(reference "R3")
+					(reference "R9")
 					(unit 1)
 				)
 			)
