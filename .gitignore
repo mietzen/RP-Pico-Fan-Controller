@@ -5,4 +5,7 @@ RP2040_Fan_Controller/_autosave*
 RP2040_Fan_Controller/fp-info-cache
 RP2040_Fan_Controller/fp-lib-table
 RP2040_Fan_Controller/*.lck
+RP2040_Fan_Controller/*-bak
 .venv
+*.zip
+.vscode
