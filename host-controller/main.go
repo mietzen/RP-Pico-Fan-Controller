@@ -18,6 +18,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/gosnmp/gosnmp"
 	"go.bug.st/serial"
 	"go.yaml.in/yaml/v3"
 )
@@ -27,10 +28,12 @@ const (
 	DefaultFanSpeed     = 50
 	DefaultBaudRate     = 115200
 	DefaultUpdateRateMs = 500
-	DefaultMinFanSpeed  = 20
+	DefaultMinFanSpeed  = 0
 	DefaultMaxFanSpeed  = 100
-	DefaultThermBValue  = 3950
+	DefaultThermBValue  = 3450
 	FanSpeedStepSize    = 5
+	DefaultSNMPPort     = 161
+	DefaultSNMPInterval = 30
 )
 
 // JSON Schema Types
@@ -80,6 +83,17 @@ type ServerConfig struct {
 	SerialDevice string        `yaml:"serial_device"`
 	BaudRate     int           `yaml:"baud_rate"`
 	AutoDetect   bool          `yaml:"auto_detect"`
+	SNMP         SNMPConfig    `yaml:"snmp"`
+}
+
+type SNMPConfig struct {
+	Enabled     bool          `yaml:"enabled"`
+	Host        string        `yaml:"host"`
+	Port        uint16        `yaml:"port"`
+	Community   string        `yaml:"community"`
+	Interval    time.Duration `yaml:"interval"`
+	TempOIDBase string        `yaml:"temp_oid_base"`
+	FanOIDBase  string        `yaml:"fan_oid_base"`
 }
 
 type FanConfig struct {
@@ -105,24 +119,7 @@ type Controller struct {
 	serialPort   serial.Port
 	measurements Response
 	detached     bool
-}
-
-var (
-	// Platform-specific socket paths
-	socketPath = getPlatformSocketPath()
-)
-
-func getPlatformSocketPath() string {
-	switch runtime.GOOS {
-	case "darwin":
-		return "/tmp/fancontroller.sock"
-	case "linux":
-		return "/run/fancontroller.sock"
-	case "freebsd":
-		return "/var/run/fancontroller.sock"
-	default:
-		return "/tmp/fancontroller.sock"
-	}
+	snmpClient   *gosnmp.GoSNMP
 }
 
 func main() {
@@ -199,6 +196,93 @@ func printHelp() {
 	fmt.Println("")
 	fmt.Println("Platform support: macOS, Linux, FreeBSD")
 	fmt.Println("Windows support available via Docker with serial device passthrough")
+}
+
+func (c *Controller) initSNMP() error {
+	if !c.config.Server.SNMP.Enabled {
+		return nil
+	}
+
+	c.snmpClient = &gosnmp.GoSNMP{
+		Target:    c.config.Server.SNMP.Host,
+		Port:      c.config.Server.SNMP.Port,
+		Community: c.config.Server.SNMP.Community,
+		Version:   gosnmp.Version2c,
+		Timeout:   time.Duration(2) * time.Second,
+	}
+
+	if err := c.snmpClient.Connect(); err != nil {
+		return fmt.Errorf("failed to connect to SNMP server: %v", err)
+	}
+
+	log.Printf("SNMP client connected to %s:%d", c.config.Server.SNMP.Host, c.config.Server.SNMP.Port)
+	return nil
+}
+
+func (c *Controller) sendSNMPData() error {
+	if !c.config.Server.SNMP.Enabled || c.snmpClient == nil {
+		return nil
+	}
+
+	var pdus []gosnmp.SnmpPDU
+
+	// Send temperature data
+	for name, data := range c.measurements.Thermometers {
+		oid := fmt.Sprintf("%s.%s", c.config.Server.SNMP.TempOIDBase, name)
+		pdus = append(pdus, gosnmp.SnmpPDU{
+			Name:  oid,
+			Type:  gosnmp.OctetString,
+			Value: fmt.Sprintf("%.1f", data.Temp),
+		})
+	}
+
+	// Send fan data
+	for name, data := range c.measurements.Fans {
+		speedOID := fmt.Sprintf("%s.%s.speed", c.config.Server.SNMP.FanOIDBase, name)
+		rpmOID := fmt.Sprintf("%s.%s.rpm", c.config.Server.SNMP.FanOIDBase, name)
+
+		pdus = append(pdus,
+			gosnmp.SnmpPDU{
+				Name:  speedOID,
+				Type:  gosnmp.Integer,
+				Value: data.Speed,
+			},
+			gosnmp.SnmpPDU{
+				Name:  rpmOID,
+				Type:  gosnmp.Integer,
+				Value: data.RPM,
+			},
+		)
+	}
+
+	if len(pdus) > 0 {
+		_, err := c.snmpClient.Set(pdus)
+		if err != nil {
+			return fmt.Errorf("failed to send SNMP data: %v", err)
+		}
+	}
+
+	return nil
+}
+
+func (c *Controller) startSNMPSender(ctx context.Context) {
+	if !c.config.Server.SNMP.Enabled {
+		return
+	}
+
+	ticker := time.NewTicker(c.config.Server.SNMP.Interval * time.Second)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			if err := c.sendSNMPData(); err != nil {
+				log.Printf("SNMP send error: %v", err)
+			}
+		}
+	}
 }
 
 func listSerialDevices() {
@@ -304,6 +388,19 @@ func autoDetectSerialDevice() string {
 	return ""
 }
 
+func getPlatformSocketPath() string {
+	switch runtime.GOOS {
+	case "darwin":
+		return "/tmp/fancontroller.sock"
+	case "linux":
+		return "/run/fancontroller.sock"
+	case "freebsd":
+		return "/var/run/fancontroller.sock"
+	default:
+		return "/tmp/fancontroller.sock"
+	}
+}
+
 func validateConfig(config *Config) error {
 	// Validate fans reference existing thermistors and curves
 	for fanName, fanConfig := range config.Fans {
@@ -344,7 +441,7 @@ func loadConfig(path string) (*Config, error) {
 
 	// Set defaults using constants
 	if config.Server.SocketPath == "" {
-		config.Server.SocketPath = socketPath
+		config.Server.SocketPath = getPlatformSocketPath()
 	}
 	if config.Server.UpdateRate == 0 {
 		config.Server.UpdateRate = DefaultUpdateRateMs * time.Millisecond
@@ -365,11 +462,20 @@ func loadConfig(path string) (*Config, error) {
 func createDefaultConfig() *Config {
 	return &Config{
 		Server: ServerConfig{
-			SocketPath:   socketPath,
+			SocketPath:   getPlatformSocketPath(),
 			UpdateRate:   DefaultUpdateRateMs * time.Millisecond,
 			SerialDevice: "", // Will be auto-detected
 			BaudRate:     DefaultBaudRate,
 			AutoDetect:   true,
+			SNMP: SNMPConfig{
+				Enabled:     false,
+				Host:        "localhost",
+				Port:        DefaultSNMPPort,
+				Community:   "public",
+				Interval:    DefaultSNMPInterval,
+				TempOIDBase: "1.3.6.1.4.1.99999.1.1",
+				FanOIDBase:  "1.3.6.1.4.1.99999.1.2",
+			},
 		},
 		Fans: map[string]FanConfig{
 			"fan1": {
@@ -471,7 +577,7 @@ func saveConfig(config *Config, path string) error {
 }
 
 func isDaemonRunning() bool {
-	conn, err := net.Dial("unix", socketPath)
+	conn, err := net.Dial("unix", getPlatformSocketPath())
 	if err != nil {
 		return false
 	}
@@ -506,8 +612,21 @@ func runDaemon(config *Config) {
 		log.Fatalf("Failed to configure thermistors: %v", err)
 	}
 
+	// Initialize SNMP
+	if err := controller.initSNMP(); err != nil {
+		log.Printf("SNMP initialization failed: %v", err)
+	}
+	defer func() {
+		if controller.snmpClient != nil {
+			controller.snmpClient.Conn.Close()
+		}
+	}()
+
 	// Start socket server
 	go controller.startSocketServer(ctx)
+
+	// Start SNMP server
+	go controller.startSNMPSender(ctx)
 
 	// Start control loop
 	controller.controlLoop(ctx)
@@ -563,16 +682,16 @@ func (c *Controller) configureThermistors() error {
 
 func (c *Controller) startSocketServer(ctx context.Context) {
 	// Remove existing socket
-	os.Remove(socketPath)
-	listener, err := net.Listen("unix", socketPath)
+	os.Remove(getPlatformSocketPath())
+	listener, err := net.Listen("unix", getPlatformSocketPath())
 	if err != nil {
 		log.Fatalf("Failed to create Unix socket: %v", err)
 	}
 
 	defer listener.Close()
-	defer os.Remove(socketPath)
+	defer os.Remove(getPlatformSocketPath())
 
-	log.Printf("Socket server started at %s", socketPath)
+	log.Printf("Socket server started at %s", getPlatformSocketPath())
 
 	go func() {
 		<-ctx.Done()
@@ -811,7 +930,7 @@ func (c *Controller) sendCommand(cmd Command) error {
 }
 
 func connectToSocket() (net.Conn, error) {
-	return net.Dial("unix", socketPath)
+	return net.Dial("unix", getPlatformSocketPath())
 }
 
 func showMeasurements() {

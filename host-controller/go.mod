@@ -3,8 +3,9 @@ module host-controller
 go 1.24.4
 
 require (
+	github.com/gosnmp/gosnmp v1.41.0
 	go.bug.st/serial v1.6.4
-	gopkg.in/yaml.v3 v3.0.1
+	go.yaml.in/yaml/v3 v3.0.3
 )
 
 require (
