@@ -19,7 +19,7 @@ import (
 	"time"
 
 	"go.bug.st/serial"
-	"gopkg.in/yaml.v3"
+	"go.yaml.in/yaml/v3"
 )
 
 const (
