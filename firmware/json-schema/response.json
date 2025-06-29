@@ -1,0 +1,137 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://example.com/schemas/fan-controller-response.json",
+    "title": "Fan Controller Response",
+    "oneOf": [
+        {
+            "$ref": "#/$defs/SuccessResponse"
+        },
+        {
+            "$ref": "#/$defs/ErrorResponse"
+        },
+        {
+            "$ref": "#/$defs/MeasurementsResponse"
+        }
+    ],
+    "$defs": {
+        "SuccessResponse": {
+            "type": "object",
+            "required": [
+                "status"
+            ],
+            "properties": {
+                "status": {
+                    "const": "ok"
+                }
+            },
+            "additionalProperties": false
+        },
+        "ErrorResponse": {
+            "type": "object",
+            "required": [
+                "status",
+                "msg"
+            ],
+            "properties": {
+                "status": {
+                    "const": "error"
+                },
+                "msg": {
+                    "type": "string",
+                    "description": "Error message"
+                }
+            },
+            "additionalProperties": false
+        },
+        "MeasurementsResponse": {
+            "type": "object",
+            "required": [
+                "fans",
+                "thermometers"
+            ],
+            "properties": {
+                "fans": {
+                    "type": "object",
+                    "properties": {
+                        "fan1": {
+                            "$ref": "#/$defs/FanData"
+                        },
+                        "fan2": {
+                            "$ref": "#/$defs/FanData"
+                        },
+                        "fan3": {
+                            "$ref": "#/$defs/FanData"
+                        },
+                        "fan4": {
+                            "$ref": "#/$defs/FanData"
+                        },
+                        "fan5": {
+                            "$ref": "#/$defs/FanData"
+                        },
+                        "fan6": {
+                            "$ref": "#/$defs/FanData"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "thermometers": {
+                    "type": "object",
+                    "properties": {
+                        "th1": {
+                            "$ref": "#/$defs/ThermData"
+                        },
+                        "th2": {
+                            "$ref": "#/$defs/ThermData"
+                        },
+                        "th3": {
+                            "$ref": "#/$defs/ThermData"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        },
+        "FanData": {
+            "type": "object",
+            "required": [
+                "speed",
+                "rpm"
+            ],
+            "properties": {
+                "speed": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100,
+                    "description": "Current speed percentage"
+                },
+                "rpm": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Current RPM reading"
+                }
+            },
+            "additionalProperties": false
+        },
+        "ThermData": {
+            "type": "object",
+            "required": [
+                "temp",
+                "b-value"
+            ],
+            "properties": {
+                "temp": {
+                    "type": "number",
+                    "description": "Temperature in Celsius"
+                },
+                "b-value": {
+                    "type": "integer",
+                    "minimum": 3000,
+                    "maximum": 5000,
+                    "description": "Current B-value setting"
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}

@@ -1,0 +1,137 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://example.com/schemas/fan-controller-command.json",
+    "title": "Fan Controller Command",
+    "type": "object",
+    "required": [
+        "cmd"
+    ],
+    "properties": {
+        "cmd": {
+            "type": "string",
+            "enum": [
+                "alive",
+                "set-fan-speed",
+                "set-th-config",
+                "get-measurements"
+            ]
+        },
+        "payload": {
+            "type": "object"
+        }
+    },
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "cmd": {
+                        "const": "set-fan-speed"
+                    }
+                }
+            },
+            "then": {
+                "required": [
+                    "payload"
+                ],
+                "properties": {
+                    "payload": {
+                        "$ref": "#/$defs/SetFanSpeedPayload"
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "cmd": {
+                        "const": "set-th-config"
+                    }
+                }
+            },
+            "then": {
+                "required": [
+                    "payload"
+                ],
+                "properties": {
+                    "payload": {
+                        "$ref": "#/$defs/SetThConfigPayload"
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "cmd": {
+                        "const": "alive"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "payload": false
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "cmd": {
+                        "const": "get-measurements"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "payload": false
+                }
+            }
+        }
+    ],
+    "$defs": {
+        "SetFanSpeedPayload": {
+            "type": "object",
+            "required": [
+                "fan",
+                "speed"
+            ],
+            "properties": {
+                "fan": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 6,
+                    "description": "Fan number (1-6)"
+                },
+                "speed": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100,
+                    "description": "Speed percentage (0-100)"
+                }
+            },
+            "additionalProperties": false
+        },
+        "SetThConfigPayload": {
+            "type": "object",
+            "required": [
+                "th",
+                "b-value"
+            ],
+            "properties": {
+                "th": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 3,
+                    "description": "Thermistor number (1-3)"
+                },
+                "b-value": {
+                    "type": "integer",
+                    "minimum": 3000,
+                    "maximum": 5000,
+                    "description": "B-value for temperature calculation"
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}
