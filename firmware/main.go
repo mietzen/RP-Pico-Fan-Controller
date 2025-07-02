@@ -7,12 +7,22 @@ import (
 	"time"
 )
 
+const (
+	DefaultBValue    = 3450
+	DefaultFanSpeed  = 60      // Percent
+	PwmFrequency     = 25000   // Hz
+	ResistorValue    = 10000.0 // Ohm
+	ThermistorValue  = 10000.0 // Ohm
+	WatchdogInterval = 1000    // milliseconds
+	WatchdogTimeout  = 10000   // milliseconds
+)
+
 type Fan struct {
 	pwmPin     machine.Pin
 	rpmPin     machine.Pin
 	pwm        PWM
 	channel    uint8
-	speed      uint32 // 0-100
+	speed      uint32
 	rpm        uint32
 	pulseCount uint32
 }
@@ -66,23 +76,32 @@ type Measurements struct {
 }
 
 var (
-	fans         [6]Fan
-	thermistors  [3]Thermistor
-	serialBuffer []byte
+	fans           [6]Fan
+	thermistors    [3]Thermistor
+	serialBuffer   []byte
+	lastAliveTime  time.Time
+	watchdogActive bool
+	led            machine.Pin
 )
 
 func main() {
-	time.Sleep(time.Millisecond * 2000)
+	time.Sleep(time.Second * 2)
 	println("Fan Controller Starting...")
+
+	led = machine.LED
+	led.Configure(machine.PinConfig{Mode: machine.PinOutput})
+	led.High()
 
 	initializeFans()
 	initializeThermistors()
 	startRPMCalculation()
 	startTempReading()
-	println("Setting default fan speed...")
-	for i := range fans {
-		setFanSpeed(i, 60)
-	}
+	setAllFansToDefaultSpeed()
+	startAliveWatchdog()
+
+	lastAliveTime = time.Now()
+	watchdogActive = true
+
 	println("Ready for commands")
 
 	for {
@@ -93,8 +112,8 @@ func main() {
 
 func initializeFans() {
 	fanConfigs := []struct {
-		pwmPin machine.Pin
 		rpmPin machine.Pin
+		pwmPin machine.Pin
 		pwm    PWM
 	}{
 		{machine.GP2, machine.GP3, machine.PWM1},
@@ -111,9 +130,8 @@ func initializeFans() {
 		fans[i].pwm = fanConfigs[i].pwm
 		fans[i].speed = 0
 
-		// Configure PWM
 		err := fans[i].pwm.Configure(machine.PWMConfig{
-			Period: uint64(1e9 / 25000), // 25kHz
+			Period: uint64(1e9 / PwmFrequency),
 		})
 		if err != nil {
 			println("PWM config error fan", i+1, ":", err.Error())
@@ -127,11 +145,9 @@ func initializeFans() {
 		}
 		fans[i].channel = ch
 
-		// Configure RPM pin
 		fans[i].rpmPin.Configure(machine.PinConfig{Mode: machine.PinInputPullup})
 
-		// Attach interrupt
-		fanIndex := i // Capture for closure
+		fanIndex := i
 		err = fans[i].rpmPin.SetInterrupt(machine.PinFalling, func(p machine.Pin) {
 			fans[fanIndex].pulseCount++
 		})
@@ -149,7 +165,7 @@ func initializeThermistors() {
 	for i := range thermistors {
 		thermistors[i].adc = machine.ADC{Pin: adcPins[i]}
 		thermistors[i].adc.Configure(machine.ADCConfig{})
-		thermistors[i].bValue = 3370.0 // Default B-value
+		thermistors[i].bValue = DefaultBValue
 	}
 }
 
@@ -160,7 +176,8 @@ func startRPMCalculation() {
 			for i := range fans {
 				count := fans[i].pulseCount
 				fans[i].pulseCount = 0
-				fans[i].rpm = (count / 2) * 60 // 2 pulses per revolution
+				// 2 pulses per revolution
+				fans[i].rpm = (count / 2) * 60
 			}
 		}
 	}()
@@ -177,15 +194,43 @@ func startTempReading() {
 	}()
 }
 
-func readTemperature(index int) {
-	const (
-		r25   = 10000.0
-		rHigh = 10000.0
-	)
+func startAliveWatchdog() {
+	go func() {
+		ticker := time.NewTicker(WatchdogInterval * time.Millisecond)
+		for range ticker.C {
+			if watchdogActive && time.Since(lastAliveTime) > WatchdogTimeout*time.Millisecond {
+				println("Alive timeout - setting all fans to 60%")
+				setAllFansToDefaultSpeed()
+				watchdogActive = false
+				go blinkLED()
+			}
+		}
+	}()
+}
 
+func setAllFansToDefaultSpeed() {
+	for i := range fans {
+		setFanSpeed(i, DefaultFanSpeed)
+	}
+}
+
+func blinkLED() {
+	for !watchdogActive {
+		led.Low()
+		time.Sleep(time.Millisecond * 500)
+		led.High()
+		time.Sleep(time.Millisecond * 500)
+	}
+	// Keep LED solid on when watchdog is active again
+	led.High()
+}
+
+func readTemperature(index int) {
 	adcValue := float64(thermistors[index].adc.Get())
-	r := rHigh * (65535.0/adcValue - 1.0)
-	lnr := math.Log(r / r25)
+	// 16 Bit ADC
+	r := ResistorValue * (65535.0/adcValue - 1.0)
+	lnr := math.Log(r / ThermistorValue)
+	// Steinhart Equation
 	thermistors[index].temp = -274.15 + 1.0/(1.0/298.15+lnr/thermistors[index].bValue)
 }
 
@@ -229,6 +274,12 @@ func processCommand(cmdStr string) {
 	}
 
 	switch cmd.Cmd {
+	case "alive":
+		lastAliveTime = time.Now()
+		watchdogActive = true
+		led.High()
+		sendResponse(Response{Status: "ok"})
+
 	case "set-th-config":
 		var config SetThConfig
 		err := json.Unmarshal(cmd.Payload, &config)

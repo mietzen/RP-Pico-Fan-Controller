@@ -10,3 +10,4 @@ RP2040_Fan_Controller/*-bak
 *.zip
 .vscode
 go.sum
+tinygo
