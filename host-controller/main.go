@@ -9,6 +9,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"os/exec"
 	"os/signal"
 	"path/filepath"
 	"runtime"
@@ -75,6 +76,7 @@ type ServerConfig struct {
 	BaudRate     int           `yaml:"baud_rate"`
 	AutoDetect   bool          `yaml:"auto_detect"`
 	SNMP         SNMPConfig    `yaml:"snmp"`
+	LogPath      string        `yaml:"log_path"`
 }
 type SNMPConfig struct {
 	Enabled     bool          `yaml:"enabled"`
@@ -116,6 +118,27 @@ func SortKeys[T any](m map[string]T) []string {
 	return keys
 }
 
+func startAsDaemon(configPath string, logFile string) {
+	file, err := os.OpenFile(logFile, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatalf("Failed to open log file: %v", err)
+	}
+
+	cmd := exec.Command(os.Args[0], "run", "--config", configPath)
+	cmd.Stdout = file
+	cmd.Stderr = file
+	cmd.Stdin = nil
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		Setsid: true, // Fully detach
+	}
+
+	if err := cmd.Start(); err != nil {
+		log.Fatalf("Failed to start daemon: %v", err)
+	}
+
+	fmt.Printf("Daemon started with PID %d, logging to %s\n", cmd.Process.Pid, logFile)
+}
+
 func main() {
 	if len(os.Args) < 2 {
 		printHelp()
@@ -128,17 +151,16 @@ func main() {
 		configPath := runCmd.String("config", DefaultConfigPath, "Path to config file")
 		daemon := runCmd.Bool("daemon", false, "Run in daemon mode")
 		runCmd.Parse(os.Args[2:])
-
-		running := isDaemonRunning()
-		if *daemon || !running {
-			config, err := loadConfig(*configPath)
-			if err != nil {
-				log.Fatalf("Failed to load config: %v", err)
-			}
-			runDaemon(config)
-		} else {
-			fmt.Println("Daemon is already running. Use 'show' to see measurements.")
+		config, err := loadConfig(*configPath)
+		logPath := config.Server.LogPath
+		if err != nil {
+			log.Fatalf("Failed to load config: %v", err)
 		}
+		if *daemon {
+			startAsDaemon(*configPath, logPath)
+			return
+		}
+		startController(config)
 
 	case "show":
 		showCmd := flag.NewFlagSet("show", flag.ExitOnError)
@@ -170,7 +192,7 @@ func printHelp() {
 	fmt.Println("  fancontroller <command> [options]")
 	fmt.Println("")
 	fmt.Println("Commands:")
-	fmt.Println("  run               Run fancontroller (optionally as daemon)")
+	fmt.Println("  run               Run fancontroller")
 	fmt.Println("    --config        Path to config file (default: ./config.yml)")
 	fmt.Println("    --daemon        Run in daemon mode")
 	fmt.Println("")
@@ -256,7 +278,7 @@ func (c *Controller) startSNMPSender(ctx context.Context) {
 }
 func listSerialDevices() {
 	fmt.Println("Available serial devices:")
-	fmt.Println("========================")
+	fmt.Println("=========================")
 	devices := findSerialDevices()
 	if len(devices) == 0 {
 		fmt.Println("No serial devices found")
@@ -271,23 +293,19 @@ func findSerialDevices() []string {
 	var searchPaths []string
 	switch runtime.GOOS {
 	case "darwin":
-
 		searchPaths = []string{
 			"/dev/tty.usb*",
 		}
 	case "linux":
-
 		searchPaths = []string{
 			"/dev/ttyUSB*",
 			"/dev/ttyACM*",
 		}
 	case "freebsd":
-
 		searchPaths = []string{
 			"/dev/cuaU*",
 		}
 	default:
-
 		searchPaths = []string{
 			"/dev/tty*",
 		}
@@ -347,27 +365,103 @@ func getPlatformSocketPath() string {
 	}
 }
 func validateConfig(config *Config) error {
+	// Validate server config
+	if config.Server.SocketPath == "" {
+		return fmt.Errorf("server.socket_path must not be empty")
+	}
+	if config.Server.UpdateRate <= 0 {
+		return fmt.Errorf("server.update_rate must be greater than 0")
+	}
+	if config.Server.BaudRate <= 0 {
+		return fmt.Errorf("server.baud_rate must be greater than 0")
+	}
+	if config.Server.LogPath == "" {
+		return fmt.Errorf("server.log_path must not be empty")
+	}
 
-	for fanName, fanConfig := range config.Fans {
-		if _, exists := config.Thermistors[fanConfig.Thermistor]; !exists {
-			return fmt.Errorf("fan '%s' references non-existent thermistor '%s'", fanName, fanConfig.Thermistor)
+	// Validate SNMP config if enabled
+	snmp := config.Server.SNMP
+	if snmp.Enabled {
+		if snmp.Host == "" {
+			return fmt.Errorf("snmp.host must not be empty")
 		}
-		if _, exists := config.Curves[fanConfig.Curve]; !exists {
-			return fmt.Errorf("fan '%s' references non-existent curve '%s'", fanName, fanConfig.Curve)
+		if snmp.Port == 0 || snmp.Port > 65535 {
+			return fmt.Errorf("snmp.port must be between 1 and 65535")
+		}
+		if snmp.Community == "" {
+			return fmt.Errorf("snmp.community must not be empty")
+		}
+		if snmp.Interval <= 0 {
+			return fmt.Errorf("snmp.interval must be greater than 0")
+		}
+		if snmp.TempOIDBase == "" || snmp.FanOIDBase == "" {
+			return fmt.Errorf("snmp.oid_base values must not be empty")
 		}
 	}
+
+	// Validate thermistors
+	for name, therm := range config.Thermistors {
+		if therm.BValue <= 0 {
+			return fmt.Errorf("thermistor '%s' has invalid B-value: %d", name, therm.BValue)
+		}
+	}
+
+	// Validate fan configs
+	for fanName, fanConfig := range config.Fans {
+		if fanConfig.Thermistor == "" {
+			return fmt.Errorf("fan '%s' has empty thermistor reference", fanName)
+		}
+		if _, ok := config.Thermistors[fanConfig.Thermistor]; !ok {
+			return fmt.Errorf("fan '%s' references non-existent thermistor '%s'", fanName, fanConfig.Thermistor)
+		}
+		if fanConfig.Curve == "" {
+			return fmt.Errorf("fan '%s' has empty curve reference", fanName)
+		}
+		if _, ok := config.Curves[fanConfig.Curve]; !ok {
+			return fmt.Errorf("fan '%s' references non-existent curve '%s'", fanName, fanConfig.Curve)
+		}
+		if fanConfig.MinSpeed < 0 || fanConfig.MaxSpeed > 100 || fanConfig.MinSpeed > fanConfig.MaxSpeed {
+			return fmt.Errorf("fan '%s' has invalid speed range: min=%d max=%d", fanName, fanConfig.MinSpeed, fanConfig.MaxSpeed)
+		}
+	}
+
+	// Validate curves
+	for curveName, points := range config.Curves {
+		if len(points) < 2 {
+			return fmt.Errorf("curve '%s' must contain at least 2 points", curveName)
+		}
+		prevTemp := -1.0
+		for i, point := range points {
+			if point.Temp < 0 {
+				return fmt.Errorf("curve '%s', point %d has negative temperature: %.1f", curveName, i, point.Temp)
+			}
+			if point.Speed < 0 || point.Speed > 100 {
+				return fmt.Errorf("curve '%s', point %d has invalid speed: %d", curveName, i, point.Speed)
+			}
+			if point.Temp <= prevTemp {
+				return fmt.Errorf("curve '%s' points must be in strictly increasing temperature order", curveName)
+			}
+			prevTemp = point.Temp
+		}
+	}
+
 	return nil
 }
-func loadConfig(path string) (*Config, error) {
 
+func loadConfig(path string) (*Config, error) {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		config := createDefaultConfig()
+
+		if err := validateConfig(config); err != nil {
+			return nil, fmt.Errorf("default config validation failed: %v", err)
+		}
 		if err := saveConfig(config, path); err != nil {
 			return nil, fmt.Errorf("failed to create default config: %v", err)
 		}
 		fmt.Printf("Created default config at %s\n", path)
 		return config, nil
 	}
+
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
@@ -380,6 +474,7 @@ func loadConfig(path string) (*Config, error) {
 		return nil, fmt.Errorf("config validation failed: %v", err)
 	}
 
+	// Apply fallbacks for legacy fields
 	if config.Server.SocketPath == "" {
 		config.Server.SocketPath = getPlatformSocketPath()
 	}
@@ -397,6 +492,7 @@ func loadConfig(path string) (*Config, error) {
 	}
 	return &config, nil
 }
+
 func createDefaultConfig() *Config {
 	return &Config{
 		Server: ServerConfig{
@@ -405,6 +501,7 @@ func createDefaultConfig() *Config {
 			SerialDevice: "",
 			BaudRate:     DefaultBaudRate,
 			AutoDetect:   true,
+			LogPath:      "./pico-fan-controller.log",
 			SNMP: SNMPConfig{
 				Enabled:     false,
 				Host:        "localhost",
@@ -518,7 +615,7 @@ func isDaemonRunning() bool {
 	conn.Close()
 	return true
 }
-func runDaemon(config *Config) {
+func startController(config *Config) {
 	controller := &Controller{
 		config: config,
 	}
