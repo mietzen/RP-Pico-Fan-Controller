@@ -339,19 +339,53 @@ func autoDetectSerialDevice() string {
 		preferred = []string{"cuaU"}
 	}
 
-	for _, pref := range preferred {
-		for _, device := range devices {
-			if strings.Contains(device, pref) {
-				return device
-			}
-		}
-	}
+	// Sort preferred first
+	sorted := sortDevicesByPreference(devices, preferred)
 
-	if len(devices) > 0 {
-		return devices[0]
+	for _, dev := range sorted {
+		port, err := openSerialPort(dev)
+		if err != nil {
+			continue
+		}
+		log.Printf("Probing serial device: %s", dev)
+
+		controller := &Controller{serialPort: port}
+		err = controller.sendCommand(Command{Cmd: "alive"})
+		port.Close()
+
+		if err == nil {
+			log.Printf("Found device: %s", dev)
+			return dev
+		} else {
+			log.Printf("Rejected %s: %v", dev, err)
+		}
 	}
 	return ""
 }
+func openSerialPort(path string) (serial.Port, error) {
+	mode := &serial.Mode{
+		BaudRate: DefaultBaudRate,
+	}
+	return serial.Open(path, mode)
+}
+func sortDevicesByPreference(devices, preferredPrefixes []string) []string {
+	var preferred, rest []string
+	for _, d := range devices {
+		matched := false
+		for _, prefix := range preferredPrefixes {
+			if strings.Contains(d, prefix) {
+				preferred = append(preferred, d)
+				matched = true
+				break
+			}
+		}
+		if !matched {
+			rest = append(rest, d)
+		}
+	}
+	return append(preferred, rest...)
+}
+
 func getPlatformSocketPath() string {
 	switch runtime.GOOS {
 	case "darwin":
@@ -365,7 +399,6 @@ func getPlatformSocketPath() string {
 	}
 }
 func validateConfig(config *Config) error {
-	// Validate server config
 	if config.Server.SocketPath == "" {
 		return fmt.Errorf("server.socket_path must not be empty")
 	}
@@ -379,13 +412,12 @@ func validateConfig(config *Config) error {
 		return fmt.Errorf("server.log_path must not be empty")
 	}
 
-	// Validate SNMP config if enabled
 	snmp := config.Server.SNMP
 	if snmp.Enabled {
 		if snmp.Host == "" {
 			return fmt.Errorf("snmp.host must not be empty")
 		}
-		if snmp.Port == 0 || snmp.Port > 65535 {
+		if !(snmp.Port > 1 && snmp.Port < 65535) {
 			return fmt.Errorf("snmp.port must be between 1 and 65535")
 		}
 		if snmp.Community == "" {
@@ -399,14 +431,12 @@ func validateConfig(config *Config) error {
 		}
 	}
 
-	// Validate thermistors
 	for name, therm := range config.Thermistors {
 		if therm.BValue <= 0 {
 			return fmt.Errorf("thermistor '%s' has invalid B-value: %d", name, therm.BValue)
 		}
 	}
 
-	// Validate fan configs
 	for fanName, fanConfig := range config.Fans {
 		if fanConfig.Thermistor == "" {
 			return fmt.Errorf("fan '%s' has empty thermistor reference", fanName)
@@ -425,7 +455,6 @@ func validateConfig(config *Config) error {
 		}
 	}
 
-	// Validate curves
 	for curveName, points := range config.Curves {
 		if len(points) < 2 {
 			return fmt.Errorf("curve '%s' must contain at least 2 points", curveName)
@@ -474,7 +503,6 @@ func loadConfig(path string) (*Config, error) {
 		return nil, fmt.Errorf("config validation failed: %v", err)
 	}
 
-	// Apply fallbacks for legacy fields
 	if config.Server.SocketPath == "" {
 		config.Server.SocketPath = getPlatformSocketPath()
 	}
@@ -877,29 +905,48 @@ func (c *Controller) sendCommand(cmd Command) error {
 	if err != nil {
 		return err
 	}
-
 	data = append(data, '\n')
+
 	if _, err := c.serialPort.Write(data); err != nil {
 		return err
 	}
 
-	scanner := bufio.NewScanner(c.serialPort)
-	if !scanner.Scan() {
-		return fmt.Errorf("no response from device")
-	}
-	var response Response
-	if err := json.Unmarshal(scanner.Bytes(), &response); err != nil {
-		return fmt.Errorf("invalid response: %v", err)
-	}
-	if response.Status == "error" {
-		return fmt.Errorf("device error: %s", response.Msg)
-	}
+	// Use context for timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
 
-	if cmd.Cmd == "get-measurements" {
-		c.measurements = response
+	responseCh := make(chan []byte, 1)
+	errCh := make(chan error, 1)
+
+	go func() {
+		scanner := bufio.NewScanner(c.serialPort)
+		if !scanner.Scan() {
+			errCh <- fmt.Errorf("no response from device")
+			return
+		}
+		responseCh <- scanner.Bytes()
+	}()
+
+	select {
+	case <-ctx.Done():
+		return fmt.Errorf("timeout waiting for device response")
+	case err := <-errCh:
+		return err
+	case data := <-responseCh:
+		var response Response
+		if err := json.Unmarshal(data, &response); err != nil {
+			return fmt.Errorf("invalid response: %v", err)
+		}
+		if response.Status == "error" {
+			return fmt.Errorf("device error: %s", response.Msg)
+		}
+		if cmd.Cmd == "get-measurements" {
+			c.measurements = response
+		}
+		return nil
 	}
-	return nil
 }
+
 func connectToSocket() (net.Conn, error) {
 	return net.Dial("unix", getPlatformSocketPath())
 }
