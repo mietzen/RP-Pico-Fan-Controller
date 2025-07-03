@@ -15,6 +15,7 @@ const (
 	ThermistorValue  = 10000.0 // Ohm
 	WatchdogInterval = 1000    // milliseconds
 	WatchdogTimeout  = 10000   // milliseconds
+	InvalidTemp      = -999.9
 )
 
 type Fan struct {
@@ -228,11 +229,27 @@ func blinkLED() {
 
 func readTemperature(index int) {
 	adcValue := float64(thermistors[index].adc.Get())
-	// 16 Bit ADC
+
+	if adcValue < 1 {
+		println("Warning: ADC read 0 on thermistor", index+1)
+		thermistors[index].temp = InvalidTemp
+		return
+	}
+
+	// 16-bit ADC
 	r := ResistorValue * (65535.0/adcValue - 1.0)
+	if r <= 0 {
+		println("Warning: invalid resistance on thermistor", index+1)
+		thermistors[index].temp = InvalidTemp
+		return
+	}
+
 	lnr := math.Log(r / ThermistorValue)
-	// Steinhart Equation
-	thermistors[index].temp = -274.15 + 1.0/(1.0/298.15+lnr/thermistors[index].bValue)
+
+	// Steinhart-Hart
+	invT0 := 1.0 / 298.15 // 25C in Kelvin
+	invT := invT0 + lnr/thermistors[index].bValue
+	thermistors[index].temp = math.Round(((1.0/invT)-273.15)*10.0) / 10.0
 }
 
 func setFanSpeed(fanIndex int, speed int) error {
