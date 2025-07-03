@@ -10,13 +10,14 @@ import (
 
 const (
 	DefaultBValue    = 3450
+	InvalidTemp      = -999.9
 	DefaultFanSpeed  = 60      // Percent
 	PwmFrequency     = 25000   // Hz
 	ResistorValue    = 10000.0 // Ohm
 	ThermistorValue  = 10000.0 // Ohm
 	WatchdogInterval = 1000    // milliseconds
 	WatchdogTimeout  = 10000   // milliseconds
-	InvalidTemp      = -999.9
+	StartupDelay     = 2000    // milliseconds
 )
 
 type Fan struct {
@@ -88,7 +89,7 @@ var (
 )
 
 func main() {
-	time.Sleep(time.Second * 2)
+	time.Sleep(StartupDelay * time.Millisecond)
 	println("Fan Controller Starting...")
 
 	led = machine.LED
@@ -254,7 +255,7 @@ func readTemperature(index int) {
 }
 
 func setFanSpeed(fanIndex int, speed int) error {
-	if fanIndex < 0 || fanIndex >= 6 {
+	if fanIndex < 0 || fanIndex >= len(fans) {
 		return nil
 	}
 	if speed < 0 || speed > 100 {
@@ -274,6 +275,10 @@ func processSerial() {
 	}
 
 	if c == '\n' || c == '\r' {
+		if len(serialBuffer) > 512 {
+			serialBuffer = serialBuffer[:0]
+			println("Serial buffer overflow, reset")
+		}
 		if len(serialBuffer) > 0 {
 			processCommand(string(serialBuffer))
 			serialBuffer = serialBuffer[:0]
@@ -307,7 +312,7 @@ func processCommand(cmdStr string) {
 			return
 		}
 
-		if config.Th < 1 || config.Th > 3 {
+		if config.Th < 1 || config.Th > len(thermistors) {
 			sendResponse(Response{Status: "error", Msg: "Invalid thermistor number"})
 			return
 		}
@@ -323,7 +328,7 @@ func processCommand(cmdStr string) {
 			return
 		}
 
-		if speed.Fan < 1 || speed.Fan > 6 {
+		if speed.Fan < 1 || speed.Fan > len(fans) {
 			sendResponse(Response{Status: "error", Msg: "Invalid fan number"})
 			return
 		}
