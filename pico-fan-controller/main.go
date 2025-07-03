@@ -1014,7 +1014,7 @@ func showMeasurements(jsonOutput bool) {
 	}
 
 	if jsonOutput {
-		pretty, err := json.MarshalIndent(response, "", "  ")
+		pretty, err := json.MarshalIndent(response.Data, "", "  ")
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to encode JSON: %v\n", err)
 			os.Exit(1)
