@@ -3,9 +3,9 @@
 .vscode
 *.zip
 go.sum
-host-controller/config.yml
-host-controller/host-controller
-host-controller/pico-fan-controller.log
+pico-fan-controller/config.yml
+pico-fan-controller/pico-fan-controller
+pico-fan-controller/pico-fan-controller.log
 kicad/_autosave*
 kicad/*-bak
 kicad/*.lck
