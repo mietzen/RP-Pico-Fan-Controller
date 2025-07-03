@@ -1,7 +1,7 @@
 ```json
     {"cmd": "set-th-config","payload": {"th": [1,2,3], "b-value": "<INT>"}} -> {"status": ["ok", "error"], "msg": ""}
     {"cmd": "set-fan-speed","payload": {"fan": [1,2,3,4,5,6], "speed": "<INT>"}} -> {"status": ["ok", "error"], "msg": ""}
-    {"cmd": "get-measurments"} -> {
+    {"cmd": "get-measurements"} -> {
         "fans": {
             "fan1": {"speed": 0-100, "rpm": "<INT>"},
             "fan2": {"speed": 0-100, "rpm": "<INT>"},
