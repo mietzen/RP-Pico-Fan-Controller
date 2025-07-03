@@ -38,37 +38,48 @@ const (
 )
 
 type Command struct {
-	Cmd     string      `json:"cmd"`
-	Payload interface{} `json:"payload,omitempty"`
+	Cmd  string      `json:"cmd"`
+	Data interface{} `json:"data,omitempty"`
 }
+
 type SetFanSpeedPayload struct {
 	Fan   int `json:"fan"`
 	Speed int `json:"speed"`
 }
+
 type SetThConfigPayload struct {
 	Th     int `json:"th"`
 	BValue int `json:"b-value"`
 }
+
 type Response struct {
-	Status       string               `json:"status,omitempty"`
-	Msg          string               `json:"msg,omitempty"`
+	Status string       `json:"status,omitempty"`
+	Msg    string       `json:"msg,omitempty"`
+	Data   Measurements `json:"data,omitempty"`
+}
+
+type Measurements struct {
 	Fans         map[string]FanData   `json:"fans,omitempty"`
 	Thermometers map[string]ThermData `json:"thermometers,omitempty"`
 }
+
 type FanData struct {
 	Speed int `json:"speed"`
 	RPM   int `json:"rpm"`
 }
+
 type ThermData struct {
 	Temp   float64 `json:"temp"`
 	BValue int     `json:"b-value"`
 }
+
 type Config struct {
 	Server      ServerConfig            `yaml:"server"`
 	Fans        map[string]FanConfig    `yaml:"fans"`
 	Thermistors map[string]ThermConfig  `yaml:"thermistors"`
 	Curves      map[string][]CurvePoint `yaml:"curves"`
 }
+
 type ServerConfig struct {
 	SocketPath   string        `yaml:"socket_path"`
 	UpdateRate   time.Duration `yaml:"update_rate"`
@@ -78,6 +89,7 @@ type ServerConfig struct {
 	SNMP         SNMPConfig    `yaml:"snmp"`
 	LogPath      string        `yaml:"log_path"`
 }
+
 type SNMPConfig struct {
 	Enabled     bool          `yaml:"enabled"`
 	Host        string        `yaml:"host"`
@@ -87,6 +99,7 @@ type SNMPConfig struct {
 	TempOIDBase string        `yaml:"temp_oid_base"`
 	FanOIDBase  string        `yaml:"fan_oid_base"`
 }
+
 type FanConfig struct {
 	Thermistor    string `yaml:"thermistor"`
 	Curve         string `yaml:"curve"`
@@ -94,17 +107,20 @@ type FanConfig struct {
 	MaxSpeed      int    `yaml:"max_speed"`
 	Interpolation bool   `yaml:"interpolation"`
 }
+
 type ThermConfig struct {
 	BValue int `yaml:"b_value"`
 }
+
 type CurvePoint struct {
 	Temp  float64 `yaml:"temp"`
 	Speed int     `yaml:"speed"`
 }
+
 type Controller struct {
 	config       *Config
 	serialPort   serial.Port
-	measurements Response
+	measurements Measurements
 	detached     bool
 	snmpClient   *gosnmp.GoSNMP
 }
@@ -185,6 +201,7 @@ func main() {
 		os.Exit(1)
 	}
 }
+
 func printHelp() {
 	fmt.Println("Pico Fan Controller")
 	fmt.Println("")
@@ -203,6 +220,7 @@ func printHelp() {
 	fmt.Println("  help              Show this help")
 	fmt.Println("")
 }
+
 func (c *Controller) initSNMP() error {
 	if !c.config.Server.SNMP.Enabled {
 		return nil
@@ -220,6 +238,7 @@ func (c *Controller) initSNMP() error {
 	log.Printf("SNMP client connected to %s:%d", c.config.Server.SNMP.Host, c.config.Server.SNMP.Port)
 	return nil
 }
+
 func (c *Controller) sendSNMPData() error {
 	if !c.config.Server.SNMP.Enabled || c.snmpClient == nil {
 		return nil
@@ -259,6 +278,7 @@ func (c *Controller) sendSNMPData() error {
 	}
 	return nil
 }
+
 func (c *Controller) startSNMPSender(ctx context.Context) {
 	if !c.config.Server.SNMP.Enabled {
 		return
@@ -276,6 +296,7 @@ func (c *Controller) startSNMPSender(ctx context.Context) {
 		}
 	}
 }
+
 func listSerialDevices() {
 	fmt.Println("Available serial devices:")
 	fmt.Println("=========================")
@@ -288,6 +309,7 @@ func listSerialDevices() {
 		fmt.Printf("  %s\n", device)
 	}
 }
+
 func findSerialDevices() []string {
 	var devices []string
 	var searchPaths []string
@@ -308,6 +330,7 @@ func findSerialDevices() []string {
 	default:
 		searchPaths = []string{
 			"/dev/tty*",
+			"/dev/cu*",
 		}
 	}
 
@@ -326,6 +349,7 @@ func findSerialDevices() []string {
 	}
 	return devices
 }
+
 func autoDetectSerialDevice() string {
 	devices := findSerialDevices()
 
@@ -362,12 +386,14 @@ func autoDetectSerialDevice() string {
 	}
 	return ""
 }
+
 func openSerialPort(path string) (serial.Port, error) {
 	mode := &serial.Mode{
 		BaudRate: DefaultBaudRate,
 	}
 	return serial.Open(path, mode)
 }
+
 func sortDevicesByPreference(devices, preferredPrefixes []string) []string {
 	var preferred, rest []string
 	for _, d := range devices {
@@ -398,6 +424,7 @@ func getPlatformSocketPath() string {
 		return "/tmp/fancontroller.sock"
 	}
 }
+
 func validateConfig(config *Config) error {
 	if config.Server.SocketPath == "" {
 		return fmt.Errorf("server.socket_path must not be empty")
@@ -623,6 +650,7 @@ func createDefaultConfig() *Config {
 		},
 	}
 }
+
 func saveConfig(config *Config, path string) error {
 
 	dir := filepath.Dir(path)
@@ -635,6 +663,7 @@ func saveConfig(config *Config, path string) error {
 	}
 	return os.WriteFile(path, data, 0644)
 }
+
 func isDaemonRunning() bool {
 	conn, err := net.Dial("unix", getPlatformSocketPath())
 	if err != nil {
@@ -643,6 +672,7 @@ func isDaemonRunning() bool {
 	conn.Close()
 	return true
 }
+
 func startController(config *Config) {
 	controller := &Controller{
 		config: config,
@@ -682,6 +712,7 @@ func startController(config *Config) {
 	controller.controlLoop(ctx)
 	log.Println("Daemon stopped")
 }
+
 func (c *Controller) connectToDevice() error {
 	if c.config.Server.SerialDevice == "" {
 		return fmt.Errorf("no serial device specified and auto-detection failed")
@@ -700,6 +731,7 @@ func (c *Controller) connectToDevice() error {
 	log.Printf("Connected to serial device: %s at %d baud", c.config.Server.SerialDevice, c.config.Server.BaudRate)
 	return nil
 }
+
 func (c *Controller) configureThermistors() error {
 	for thName, thConfig := range c.config.Thermistors {
 		thNum, err := strconv.Atoi(thName[2:])
@@ -709,7 +741,7 @@ func (c *Controller) configureThermistors() error {
 		}
 		cmd := Command{
 			Cmd: "set-th-config",
-			Payload: SetThConfigPayload{
+			Data: SetThConfigPayload{
 				Th:     thNum,
 				BValue: thConfig.BValue,
 			},
@@ -721,6 +753,7 @@ func (c *Controller) configureThermistors() error {
 	log.Println("Thermistors configured")
 	return nil
 }
+
 func (c *Controller) startSocketServer(ctx context.Context) {
 
 	os.Remove(getPlatformSocketPath())
@@ -747,6 +780,7 @@ func (c *Controller) startSocketServer(ctx context.Context) {
 		go c.handleClientConnection(conn)
 	}
 }
+
 func (c *Controller) handleClientConnection(conn net.Conn) {
 	defer conn.Close()
 	decoder := json.NewDecoder(conn)
@@ -758,7 +792,7 @@ func (c *Controller) handleClientConnection(conn net.Conn) {
 	}
 	switch cmd.Cmd {
 	case "get-measurements":
-		encoder.Encode(c.measurements)
+		encoder.Encode(Response{Status: "ok", Data: c.measurements})
 	case "detach":
 		c.detached = true
 		encoder.Encode(Response{Status: "ok"})
@@ -771,6 +805,7 @@ func (c *Controller) handleClientConnection(conn net.Conn) {
 		encoder.Encode(Response{Status: "error", Msg: "Unknown command"})
 	}
 }
+
 func (c *Controller) controlLoop(ctx context.Context) {
 	ticker := time.NewTicker(c.config.Server.UpdateRate)
 	defer ticker.Stop()
@@ -797,14 +832,17 @@ func (c *Controller) controlLoop(ctx context.Context) {
 		}
 	}
 }
+
 func (c *Controller) sendAliveBeacon() error {
 	cmd := Command{Cmd: "alive"}
 	return c.sendCommand(cmd)
 }
+
 func (c *Controller) updateMeasurements() error {
 	cmd := Command{Cmd: "get-measurements"}
 	return c.sendCommand(cmd)
 }
+
 func (c *Controller) updateFanSpeeds() error {
 	if c.measurements.Thermometers == nil {
 		return nil
@@ -840,7 +878,7 @@ func (c *Controller) updateFanSpeeds() error {
 			}
 			cmd := Command{
 				Cmd: "set-fan-speed",
-				Payload: SetFanSpeedPayload{
+				Data: SetFanSpeedPayload{
 					Fan:   fanNum,
 					Speed: targetSpeed,
 				},
@@ -854,6 +892,7 @@ func (c *Controller) updateFanSpeeds() error {
 	}
 	return nil
 }
+
 func (c *Controller) calculateSpeedFromCurve(temp float64, curveName string, fanConfig FanConfig) int {
 	curve, exists := c.config.Curves[curveName]
 	if !exists {
@@ -941,7 +980,7 @@ func (c *Controller) sendCommand(cmd Command) error {
 			return fmt.Errorf("device error: %s", response.Msg)
 		}
 		if cmd.Cmd == "get-measurements" {
-			c.measurements = response
+			c.measurements = response.Data
 		}
 		return nil
 	}
@@ -950,6 +989,7 @@ func (c *Controller) sendCommand(cmd Command) error {
 func connectToSocket() (net.Conn, error) {
 	return net.Dial("unix", getPlatformSocketPath())
 }
+
 func showMeasurements(jsonOutput bool) {
 	conn, err := connectToSocket()
 	if err != nil {
@@ -961,6 +1001,7 @@ func showMeasurements(jsonOutput bool) {
 	encoder := json.NewEncoder(conn)
 	decoder := json.NewDecoder(conn)
 	cmd := Command{Cmd: "get-measurements"}
+
 	if err := encoder.Encode(cmd); err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to send command: %v\n", err)
 		os.Exit(1)
@@ -985,19 +1026,19 @@ func showMeasurements(jsonOutput bool) {
 	fmt.Println("Pico Fan Controller Measurements")
 	fmt.Println("================================")
 	fmt.Println()
-	if response.Thermometers != nil {
+	if response.Data.Thermometers != nil {
 		fmt.Println("Thermistors:")
-		for _, name := range SortKeys(response.Thermometers) {
-			data := response.Thermometers[name]
+		for _, name := range SortKeys(response.Data.Thermometers) {
+			data := response.Data.Thermometers[name]
 			fmt.Printf("  %s: %.1f°C (B-value: %d)\n", name, data.Temp, data.BValue)
 		}
 		fmt.Println()
 	}
 
-	if response.Fans != nil {
+	if response.Data.Fans != nil {
 		fmt.Println("Fans:")
-		for _, name := range SortKeys(response.Fans) {
-			data := response.Fans[name]
+		for _, name := range SortKeys(response.Data.Fans) {
+			data := response.Data.Fans[name]
 			fmt.Printf("  %s: %d%% (%d RPM)\n", name, data.Speed, data.RPM)
 		}
 	}

@@ -41,13 +41,14 @@ type PWM interface {
 }
 
 type Command struct {
-	Cmd     string          `json:"cmd"`
-	Payload json.RawMessage `json:"payload,omitempty"`
+	Cmd  string          `json:"cmd"`
+	Data json.RawMessage `json:"data,omitempty"`
 }
 
 type Response struct {
-	Status string `json:"status"`
-	Msg    string `json:"msg,omitempty"`
+	Status string          `json:"status"`
+	Data   json.RawMessage `json:"data,omitempty"`
+	Msg    string          `json:"msg,omitempty"`
 }
 
 type SetThConfig struct {
@@ -282,9 +283,9 @@ func processCommand(cmdStr string) {
 
 	case "set-th-config":
 		var config SetThConfig
-		err := json.Unmarshal(cmd.Payload, &config)
+		err := json.Unmarshal(cmd.Data, &config)
 		if err != nil {
-			sendResponse(Response{Status: "error", Msg: "Invalid payload"})
+			sendResponse(Response{Status: "error", Msg: "Invalid data"})
 			return
 		}
 
@@ -298,9 +299,9 @@ func processCommand(cmdStr string) {
 
 	case "set-fan-speed":
 		var speed SetFanSpeed
-		err := json.Unmarshal(cmd.Payload, &speed)
+		err := json.Unmarshal(cmd.Data, &speed)
 		if err != nil {
-			sendResponse(Response{Status: "error", Msg: "Invalid payload"})
+			sendResponse(Response{Status: "error", Msg: "Invalid data"})
 			return
 		}
 
@@ -342,8 +343,7 @@ func processCommand(cmdStr string) {
 		if err != nil {
 			sendResponse(Response{Status: "error", Msg: "Failed to encode response"})
 		} else {
-			machine.Serial.Write(data)
-			machine.Serial.WriteByte('\n')
+			sendResponse(Response{Status: "ok", Data: data})
 		}
 
 	default:
