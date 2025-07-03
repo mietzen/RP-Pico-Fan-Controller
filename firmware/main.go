@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"machine"
 	"math"
+	"sync/atomic"
 	"time"
 )
 
@@ -25,7 +26,7 @@ type Fan struct {
 	channel    uint8
 	speed      uint32
 	rpm        uint32
-	pulseCount uint32
+	pulseCount uint64
 }
 
 type Thermistor struct {
@@ -131,6 +132,7 @@ func initializeFans() {
 		fans[i].rpmPin = fanConfigs[i].rpmPin
 		fans[i].pwm = fanConfigs[i].pwm
 		fans[i].speed = 0
+		fans[i].pulseCount = 0
 
 		err := fans[i].pwm.Configure(machine.PWMConfig{
 			Period: uint64(1e9 / PwmFrequency),
@@ -151,7 +153,7 @@ func initializeFans() {
 
 		fanIndex := i
 		err = fans[i].rpmPin.SetInterrupt(machine.PinFalling, func(p machine.Pin) {
-			fans[fanIndex].pulseCount++
+			atomic.AddUint64(&fans[fanIndex].pulseCount, 1)
 		})
 		if err != nil {
 			println("Interrupt error fan", i+1, ":", err.Error())
@@ -176,10 +178,9 @@ func startRPMCalculation() {
 		ticker := time.NewTicker(time.Second)
 		for range ticker.C {
 			for i := range fans {
-				count := fans[i].pulseCount
-				fans[i].pulseCount = 0
+				count := atomic.SwapUint64(&fans[i].pulseCount, 0)
 				// 2 pulses per revolution
-				fans[i].rpm = (count / 2) * 60
+				fans[i].rpm = uint32((count / 2) * 60)
 			}
 		}
 	}()
