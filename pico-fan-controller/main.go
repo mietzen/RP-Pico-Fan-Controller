@@ -415,13 +415,13 @@ func sortDevicesByPreference(devices, preferredPrefixes []string) []string {
 func getPlatformSocketPath() string {
 	switch runtime.GOOS {
 	case "darwin":
-		return "/tmp/fancontroller.sock"
+		return "/tmp/pico-fan-controller.sock"
 	case "linux":
-		return "/run/fancontroller.sock"
+		return "/run/pico-fan-controller.sock"
 	case "freebsd":
-		return "/var/run/fancontroller.sock"
+		return "/var/run/pico-fan-controller.sock"
 	default:
-		return "/tmp/fancontroller.sock"
+		return "/tmp/pico-fan-controller.sock"
 	}
 }
 
