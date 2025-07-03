@@ -229,29 +229,22 @@ func blinkLED() {
 	led.High()
 }
 
+func computeTemperature(adc float64, bValue float64) float64 {
+	if adc < 1 {
+		return InvalidTemp
+	}
+	r := ResistorValue * (65535.0/adc - 1.0)
+	if r <= 0 {
+		return InvalidTemp
+	}
+	lnr := math.Log(r / ThermistorValue)
+	invT := 1.0/298.15 + lnr/bValue
+	return math.Round(((1.0/invT)-273.15)*10) / 10
+}
+
 func readTemperature(index int) {
 	adcValue := float64(thermistors[index].adc.Get())
-
-	if adcValue < 1 {
-		println("Warning: ADC read 0 on thermistor", index+1)
-		thermistors[index].temp = InvalidTemp
-		return
-	}
-
-	// 16-bit ADC
-	r := ResistorValue * (65535.0/adcValue - 1.0)
-	if r <= 0 {
-		println("Warning: invalid resistance on thermistor", index+1)
-		thermistors[index].temp = InvalidTemp
-		return
-	}
-
-	lnr := math.Log(r / ThermistorValue)
-
-	// Steinhart-Hart
-	invT0 := 1.0 / 298.15 // 25C in Kelvin
-	invT := invT0 + lnr/thermistors[index].bValue
-	thermistors[index].temp = math.Round(((1.0/invT)-273.15)*10.0) / 10.0
+	thermistors[index].temp = computeTemperature(adcValue, thermistors[index].bValue)
 }
 
 func setFanSpeed(fanIndex int, speed int) error {
