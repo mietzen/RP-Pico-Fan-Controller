@@ -868,14 +868,6 @@ func (c *Controller) handleClientConnection(conn net.Conn) {
 	switch cmd.Cmd {
 	case "get-measurements":
 		encoder.Encode(Response{Status: "ok", Data: c.measurements})
-	case "detach":
-		c.detached = true
-		encoder.Encode(Response{Status: "ok"})
-		log.Println("Detached from automatic control")
-	case "attach":
-		c.detached = false
-		encoder.Encode(Response{Status: "ok"})
-		log.Println("Attached to automatic control")
 	case "get-config":
 		encoder.Encode(Response{
 			Status: "ok",
