@@ -109,6 +109,7 @@ type CurvePoint struct {
 
 type Controller struct {
 	config       *Config
+	configFile   *string
 	serialPort   serial.Port
 	measurements Measurements
 	detached     bool
@@ -123,13 +124,13 @@ func SortKeys[T any](m map[string]T) []string {
 	return keys
 }
 
-func startAsDaemon(configPath string, logFile string) {
+func startAsDaemon(configFile string, logFile string) {
 	file, err := os.OpenFile(logFile, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatalf("Failed to open log file: %v", err)
 	}
 
-	cmd := exec.Command(os.Args[0], "run", "--config", configPath)
+	cmd := exec.Command(os.Args[0], "run", "--config", configFile)
 	cmd.Stdout = file
 	cmd.Stderr = file
 	cmd.Stdin = nil
@@ -165,7 +166,7 @@ func main() {
 			startAsDaemon(*configPath, logPath)
 			return
 		}
-		startController(config)
+		startController(config, configPath)
 
 	case "show":
 		showCmd := flag.NewFlagSet("show", flag.ExitOnError)
@@ -757,9 +758,10 @@ func isDaemonRunning() bool {
 	return true
 }
 
-func startController(config *Config) {
+func startController(config *Config, configFile *string) {
 	controller := &Controller{
-		config: config,
+		config:     config,
+		configFile: configFile,
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -891,7 +893,7 @@ func (c *Controller) handleClientConnection(conn net.Conn) {
 			return
 		}
 		c.config = &newCfg
-		if err := saveConfig(&newCfg, c.config.Server.LogPath); err != nil {
+		if err := saveConfig(&newCfg, *c.configFile); err != nil {
 			encoder.Encode(Response{Status: "error", Msg: "failed to save config"})
 			return
 		}
