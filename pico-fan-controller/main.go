@@ -51,8 +51,8 @@ type SetThConfigPayload struct {
 
 type Response struct {
 	Status string      `json:"status,omitempty"`
-	Msg    string      `json:"msg,omitempty"`  // still useful for errors and simple strings
-	Data   interface{} `json:"data,omitempty"` // generic; unmarshal to what you expect
+	Msg    string      `json:"msg,omitempty"`
+	Data   interface{} `json:"data,omitempty"`
 }
 
 type Measurements struct {
@@ -61,13 +61,17 @@ type Measurements struct {
 }
 
 type FanData struct {
-	Speed int `json:"speed"`
-	RPM   int `json:"rpm"`
+	Speed     int    `json:"speed"`
+	RPM       int    `json:"rpm"`
+	Name      string `json:"name"`
+	Connected bool   `json:"connected"`
 }
 
 type ThermData struct {
-	Temp   float64 `json:"temp"`
-	BValue int     `json:"b-value"`
+	Temp      float64 `json:"temp"`
+	BValue    int     `json:"b-value"`
+	Name      string  `json:"name"`
+	Connected bool    `json:"connected"`
 }
 
 type Config struct {
@@ -94,12 +98,14 @@ type FanConfig struct {
 	Interpolation bool   `yaml:"interpolation"`
 	Manual        bool   `yaml:"manual"`
 	FixedSpeed    int    `yaml:"fixed_speed"`
+	Connected     bool   `yaml:"connected"`
 	Name          string `yaml:"name"`
 }
 
 type ThermConfig struct {
-	BValue int    `yaml:"b_value"`
-	Name   string `yaml:"name"`
+	BValue    int    `yaml:"b_value"`
+	Name      string `yaml:"name"`
+	Connected bool   `yaml:"connected"`
 }
 
 type CurvePoint struct {
@@ -220,11 +226,13 @@ func printHelp() {
 	fmt.Println("      thermistor    Assign thermistor to fan")
 	fmt.Println("      interpolate   true | false")
 	fmt.Println("      manual        Set fixed speed (0–100) and enable manual mode")
+	fmt.Println("      connected     true | false")
 	fmt.Println("      name          Assign a human-readable name")
 	fmt.Println("")
 	fmt.Println("  set th <ID> <property> <value>")
 	fmt.Println("    Properties:")
 	fmt.Println("      b_value       Set thermistor B-value")
+	fmt.Println("      connected     true | false")
 	fmt.Println("      name          Assign a human-readable name")
 	fmt.Println("")
 	fmt.Println("  list-curves       List all available fan curve names")
@@ -239,9 +247,8 @@ func listFanCurves() {
 		log.Fatalf("Unable to fetch config: %v", err)
 	}
 	fmt.Println("Available Fan curves:")
-	fmt.Println("=====================")
 	for name := range config.Curves {
-		fmt.Printf("  %s\n", name)
+		fmt.Printf(" - %s\n", name)
 	}
 }
 
@@ -256,10 +263,11 @@ func handleSetCommand() {
 		os.Exit(1)
 	}
 
-	targetType, targetID, key, value := args[0], args[1], args[2], args[3]
+	targetType, rawID, key, value := args[0], args[1], args[2], args[3]
 
 	switch targetType {
 	case "fan":
+		targetID := "fan" + rawID
 		fan, ok := config.Fans[targetID]
 		if !ok {
 			fmt.Fprintf(os.Stderr, "Fan '%s' not found\n", targetID)
@@ -272,6 +280,7 @@ func handleSetCommand() {
 				os.Exit(1)
 			}
 			fan.Curve = value
+			fan.Manual = false
 		case "thermistor":
 			if _, ok := config.Thermistors[value]; !ok {
 				fmt.Fprintf(os.Stderr, "Thermistor '%s' not found\n", value)
@@ -290,6 +299,9 @@ func handleSetCommand() {
 			fan.FixedSpeed = speed
 		case "name":
 			fan.Name = value
+		case "connected":
+			isConnected := value == "true"
+			fan.Connected = isConnected
 		default:
 			fmt.Fprintf(os.Stderr, "Unknown fan property: %s\n", key)
 			os.Exit(1)
@@ -297,6 +309,7 @@ func handleSetCommand() {
 		config.Fans[targetID] = fan
 
 	case "th":
+		targetID := "th" + rawID
 		th, ok := config.Thermistors[targetID]
 		if !ok {
 			fmt.Fprintf(os.Stderr, "Thermistor '%s' not found\n", targetID)
@@ -312,6 +325,9 @@ func handleSetCommand() {
 			th.BValue = bv
 		case "name":
 			th.Name = value
+		case "connected":
+			isConnected := value == "true"
+			th.Connected = isConnected
 		default:
 			fmt.Fprintf(os.Stderr, "Unknown thermistor property: %s\n", key)
 			os.Exit(1)
@@ -336,14 +352,13 @@ func handleSetCommand() {
 
 func listSerialDevices() {
 	fmt.Println("Available serial devices:")
-	fmt.Println("=========================")
 	devices := findSerialDevices()
 	if len(devices) == 0 {
 		fmt.Println("No serial devices found")
 		return
 	}
 	for _, device := range devices {
-		fmt.Printf("  %s\n", device)
+		fmt.Printf(" - %s\n", device)
 	}
 }
 
@@ -591,6 +606,7 @@ func createDefaultConfig() *Config {
 				Manual:        false,
 				FixedSpeed:    40,
 				Name:          "",
+				Connected:     true,
 			},
 			"fan2": {
 				Thermistor:    "th1",
@@ -601,6 +617,7 @@ func createDefaultConfig() *Config {
 				Manual:        false,
 				FixedSpeed:    40,
 				Name:          "",
+				Connected:     true,
 			},
 			"fan3": {
 				Thermistor:    "th2",
@@ -611,6 +628,7 @@ func createDefaultConfig() *Config {
 				Manual:        false,
 				FixedSpeed:    40,
 				Name:          "",
+				Connected:     true,
 			},
 			"fan4": {
 				Thermistor:    "th2",
@@ -621,6 +639,7 @@ func createDefaultConfig() *Config {
 				Manual:        false,
 				FixedSpeed:    40,
 				Name:          "",
+				Connected:     true,
 			},
 			"fan5": {
 				Thermistor:    "th3",
@@ -631,6 +650,7 @@ func createDefaultConfig() *Config {
 				Manual:        false,
 				FixedSpeed:    40,
 				Name:          "",
+				Connected:     true,
 			},
 			"fan6": {
 				Thermistor:    "th3",
@@ -641,12 +661,25 @@ func createDefaultConfig() *Config {
 				Manual:        false,
 				FixedSpeed:    40,
 				Name:          "",
+				Connected:     true,
 			},
 		},
 		Thermistors: map[string]ThermConfig{
-			"th1": {BValue: DefaultThermBValue, Name: ""},
-			"th2": {BValue: DefaultThermBValue, Name: ""},
-			"th3": {BValue: DefaultThermBValue, Name: ""},
+			"th1": {
+				BValue:    DefaultThermBValue,
+				Name:      "",
+				Connected: true,
+			},
+			"th2": {
+				BValue:    DefaultThermBValue,
+				Name:      "",
+				Connected: true,
+			},
+			"th3": {
+				BValue:    DefaultThermBValue,
+				Name:      "",
+				Connected: true,
+			},
 		},
 		Curves: map[string][]CurvePoint{
 			"default": {
@@ -1095,6 +1128,17 @@ func connectToSocket() (net.Conn, error) {
 	return net.Dial("unix", getPlatformSocketPath())
 }
 
+func maxDisplayWidth[T any](m map[string]T, getName func(string, T) string) int {
+	maxLen := 0
+	for _, id := range SortKeys(m) {
+		name := getName(id, m[id])
+		if len(name) > maxLen {
+			maxLen = len(name)
+		}
+	}
+	return maxLen
+}
+
 func showMeasurements(jsonOutput bool) {
 	conn, err := connectToSocket()
 	if err != nil {
@@ -1134,6 +1178,33 @@ func showMeasurements(jsonOutput bool) {
 		os.Exit(1)
 	}
 
+	config, err := fetchConfigFromDaemon()
+	if err != nil {
+		log.Fatalf("Unable to fetch config: %v", err)
+	}
+
+	for fanID, fan := range measurements.Fans {
+		cfg, exists := config.Fans[fanID]
+		if exists {
+			fan.Name = cfg.Name // can be empty
+			fan.Connected = cfg.Connected
+		} else {
+			fan.Connected = false
+		}
+		measurements.Fans[fanID] = fan
+	}
+
+	for thID, th := range measurements.Thermometers {
+		cfg, exists := config.Thermistors[thID]
+		if exists {
+			th.Name = cfg.Name
+			th.Connected = cfg.Connected
+		} else {
+			th.Connected = false
+		}
+		measurements.Thermometers[thID] = th
+	}
+
 	if jsonOutput {
 		pretty, err := json.MarshalIndent(measurements, "", "  ")
 		if err != nil {
@@ -1144,23 +1215,46 @@ func showMeasurements(jsonOutput bool) {
 		return
 	}
 
-	fmt.Println("Pico Fan Controller Measurements")
-	fmt.Println("================================")
-	fmt.Println()
 	if measurements.Thermometers != nil {
 		fmt.Println("Thermistors:")
-		for _, name := range SortKeys(measurements.Thermometers) {
-			data := measurements.Thermometers[name]
-			fmt.Printf("  %s: %.1f°C (B-value: %d)\n", name, data.Temp, data.BValue)
+		width := maxDisplayWidth(measurements.Thermometers, func(id string, data ThermData) string {
+			if data.Name != "" {
+				return data.Name
+			}
+			return id
+		})
+		for _, id := range SortKeys(measurements.Thermometers) {
+			data := measurements.Thermometers[id]
+			if !data.Connected {
+				continue // skip disconnected
+			}
+			display := id
+			if data.Name != "" {
+				display = data.Name
+			}
+			fmt.Printf("  %-*s  %.1f°C (B-value: %d)\n", width, display, data.Temp, data.BValue)
 		}
 		fmt.Println()
 	}
 
 	if measurements.Fans != nil {
 		fmt.Println("Fans:")
-		for _, name := range SortKeys(measurements.Fans) {
-			data := measurements.Fans[name]
-			fmt.Printf("  %s: %d%% (%d RPM)\n", name, data.Speed, data.RPM)
+		width := maxDisplayWidth(measurements.Fans, func(id string, data FanData) string {
+			if data.Name != "" {
+				return data.Name
+			}
+			return id
+		})
+		for _, id := range SortKeys(measurements.Fans) {
+			data := measurements.Fans[id]
+			if !data.Connected {
+				continue // skip disconnected
+			}
+			display := id
+			if data.Name != "" {
+				display = data.Name
+			}
+			fmt.Printf("  %-*s  %3d%% (%d RPM)\n", width, display, data.Speed, data.RPM)
 		}
 	}
 }
