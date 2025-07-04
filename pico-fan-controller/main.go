@@ -213,6 +213,20 @@ func printHelp() {
 	fmt.Println("  show              Show current measurements")
 	fmt.Println("    --json          Output as JSON")
 	fmt.Println("")
+	fmt.Println("  set fan <ID> <property> <value>")
+	fmt.Println("    Properties:")
+	fmt.Println("      curve         Set fan curve name")
+	fmt.Println("      thermistor    Assign thermistor to fan")
+	fmt.Println("      interpolate   true | false")
+	fmt.Println("      manual        Set fixed speed (0–100) and enable manual mode")
+	fmt.Println("      name          Assign a human-readable name")
+	fmt.Println("")
+	fmt.Println("  set th <ID> <property> <value>")
+	fmt.Println("    Properties:")
+	fmt.Println("      b_value       Set thermistor B-value")
+	fmt.Println("      name          Assign a human-readable name")
+	fmt.Println("")
+	fmt.Println("  list-curves       List all available fan curve names")
 	fmt.Println("  list-serial       List available serial devices")
 	fmt.Println("  help              Show this help")
 	fmt.Println("")
@@ -575,6 +589,7 @@ func createDefaultConfig() *Config {
 				Interpolation: true,
 				Manual:        false,
 				FixedSpeed:    40,
+				Name:          "",
 			},
 			"fan2": {
 				Thermistor:    "th1",
@@ -584,6 +599,7 @@ func createDefaultConfig() *Config {
 				Interpolation: true,
 				Manual:        false,
 				FixedSpeed:    40,
+				Name:          "",
 			},
 			"fan3": {
 				Thermistor:    "th2",
@@ -593,6 +609,7 @@ func createDefaultConfig() *Config {
 				Interpolation: true,
 				Manual:        false,
 				FixedSpeed:    40,
+				Name:          "",
 			},
 			"fan4": {
 				Thermistor:    "th2",
@@ -602,6 +619,7 @@ func createDefaultConfig() *Config {
 				Interpolation: true,
 				Manual:        false,
 				FixedSpeed:    40,
+				Name:          "",
 			},
 			"fan5": {
 				Thermistor:    "th3",
@@ -611,6 +629,7 @@ func createDefaultConfig() *Config {
 				Interpolation: true,
 				Manual:        false,
 				FixedSpeed:    40,
+				Name:          "",
 			},
 			"fan6": {
 				Thermistor:    "th3",
@@ -620,12 +639,13 @@ func createDefaultConfig() *Config {
 				Interpolation: true,
 				Manual:        false,
 				FixedSpeed:    40,
+				Name:          "",
 			},
 		},
 		Thermistors: map[string]ThermConfig{
-			"th1": {BValue: DefaultThermBValue},
-			"th2": {BValue: DefaultThermBValue},
-			"th3": {BValue: DefaultThermBValue},
+			"th1": {BValue: DefaultThermBValue, Name: ""},
+			"th2": {BValue: DefaultThermBValue, Name: ""},
+			"th3": {BValue: DefaultThermBValue, Name: ""},
 		},
 		Curves: map[string][]CurvePoint{
 			"default": {
