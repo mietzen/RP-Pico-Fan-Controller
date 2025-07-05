@@ -1,3 +1,3 @@
-module pico-fan-controller
+module fancontroller
 
 go 1.24.4

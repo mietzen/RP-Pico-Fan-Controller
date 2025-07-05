@@ -467,13 +467,13 @@ func sortDevicesByPreference(devices, preferredPrefixes []string) []string {
 func getPlatformSocketPath() string {
 	switch runtime.GOOS {
 	case "darwin":
-		return "/tmp/pico-fan-controller.sock"
+		return "/tmp/fancontroller.sock"
 	case "linux":
-		return "/run/pico-fan-controller.sock"
+		return "/run/fancontroller.sock"
 	case "freebsd":
-		return "/var/run/pico-fan-controller.sock"
+		return "/var/run/fancontroller.sock"
 	default:
-		return "/tmp/pico-fan-controller.sock"
+		return "/tmp/fancontroller.sock"
 	}
 }
 
@@ -594,7 +594,7 @@ func createDefaultConfig() *Config {
 			SerialDevice: "",
 			BaudRate:     DefaultBaudRate,
 			AutoDetect:   true,
-			LogPath:      "./pico-fan-controller.log",
+			LogPath:      "./fancontroller.log",
 		},
 		Fans: map[string]FanConfig{
 			"fan1": {
