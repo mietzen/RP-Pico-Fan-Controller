@@ -14,6 +14,10 @@ The project consists of three parts:
 * The Golang fan controller, found in [fancontroller](https://github.com/mietzen/RP-Pico-Fan-Controller/tree/main/fancontroller)
 * The KiCad PCB design, found in [kicad](https://github.com/mietzen/RP-Pico-Fan-Controller/tree/main/kicad)
 
+## Firmware
+
+The firmware is waiting for commands over the serial usb interface, documented the `json` commands and responses [json-schema](https://github.com/mietzen/RP-Pico-Fan-Controller/tree/main/firmware/json-schema).
+
 ## Hardware Prototype
 
 Here are some pictures from my prototype PCB that I’m using for development:
